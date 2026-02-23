@@ -1,65 +1,69 @@
-import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { ArrowRight, FileText, ShieldCheck } from "lucide-react";
+import { articles } from "@/data/mockData";
+import { ArticleCard } from "@/components/shared/ArticleCard";
+import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <div className="flex flex-col gap-12 pb-10">
+      {/* Hero Section */}
+      <section className="bg-primary text-primary-foreground rounded-3xl p-8 md:p-16 flex flex-col items-center text-center shadow-lg relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-secondary/40 to-primary/80 z-0"></div>
+        <div className="relative z-10 max-w-3xl space-y-6">
+          <Badge className="bg-secondary text-secondary-foreground hover:bg-secondary mb-4 px-4 py-1 text-sm border-none shadow-sm">
+            v2.0 Beta Now Live
+          </Badge>
+          <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight">
+            The Total Pharmaceutical Solution
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="text-lg md:text-xl text-primary-foreground/80 font-medium">
+            Streamline your quality management, track regulatory updates, and ensure compliance with our modern, AI-powered platform.
           </p>
+          <div className="flex flex-col sm:flex-row justify-center gap-4 pt-4">
+            <Button size="lg" className="bg-secondary text-secondary-foreground hover:bg-secondary/90 text-lg px-8 rounded-full shadow-md" asChild>
+              <Link href="/sops" className="flex items-center">
+                Browse SOPs <ArrowRight className="ml-2 h-5 w-5" />
+              </Link>
+            </Button>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      {/* Feature Cards */}
+      <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="bg-card text-card-foreground rounded-2xl p-6 border shadow-sm hover:shadow-md transition-shadow">
+          <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 text-primary">
+            <FileText className="h-6 w-6" />
+          </div>
+          <h3 className="text-xl font-semibold mb-2">Smart SOP Database</h3>
+          <p className="text-muted-foreground">Access all department SOPs instantly. Filter by department and document type with blazing speed.</p>
         </div>
-      </main>
+
+        <div className="bg-card text-card-foreground rounded-2xl p-6 border shadow-sm hover:shadow-md transition-shadow">
+          <div className="h-12 w-12 rounded-xl bg-secondary/10 flex items-center justify-center mb-4 text-secondary">
+            <ShieldCheck className="h-6 w-6" />
+          </div>
+          <h3 className="text-xl font-semibold mb-2">Regulatory Updates</h3>
+          <p className="text-muted-foreground">Stay compliant with automated FDA and EMA guideline updates pushed directly to your feed.</p>
+        </div>
+      </section>
+
+      {/* Recent Updates Grid */}
+      <section className="space-y-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-bold tracking-tight">Recent Insights</h2>
+          <Button variant="ghost" className="text-primary hover:text-primary/90" asChild><Link href="#">View all</Link></Button>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {articles.map((article) => (
+            <ArticleCard key={article.id} {...article} />
+          ))}
+        </div>
+      </section>
     </div>
   );
 }
+
+// Importing Badge for the hero section
+import { Badge } from "@/components/ui/badge";
