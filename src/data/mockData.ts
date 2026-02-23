@@ -17,6 +17,7 @@ export type Article = {
   date: string;
   category: string;
   readTime: string;
+  file_url?: string;
 };
 
 export type Course = {
@@ -75,48 +76,7 @@ export const sops: SOP[] = [
   },
 ];
 
-export const articles: Article[] = [
-  {
-    id: 'ART-001',
-    title: 'FDA Finalizes Guidance on AI in Drug Manufacturing',
-    excerpt: 'The new guidance provides essential guardrails for implementing machine learning in the QA lifecycle.',
-    date: '2026-02-20',
-    category: 'Regulatory Updates',
-    readTime: '5 min read',
-  },
-  {
-    id: 'ART-002',
-    title: 'Reducing False Positives in Endotoxin Testing',
-    excerpt: 'A comprehensive review of the latest recombinant factor C (rFC) methods vs traditional LAL.',
-    date: '2026-02-15',
-    category: 'Microbiology',
-    readTime: '8 min read',
-  },
-  {
-    id: 'ART-003',
-    title: 'Data Integrity in the Cloud Era: ALCOA+ Principles',
-    excerpt: 'How modern pharmaceutical companies are securing their cloud QMS systems to ensure compliance.',
-    date: '2026-02-10',
-    category: 'Quality Assurance',
-    readTime: '6 min read',
-  },
-  {
-    id: 'ART-004',
-    title: 'Supply Chain Resiliency Post-Pandemic',
-    excerpt: 'Strategies for qualifying secondary API suppliers and mitigating high-risk bottlenecks.',
-    date: '2026-01-28',
-    category: 'Supply Chain',
-    readTime: '7 min read',
-  },
-  {
-    id: 'ART-005',
-    title: 'Next-Gen Spectrophotometry in Quality Control',
-    excerpt: 'Advancements in automated sample prep and their impact on batch release times.',
-    date: '2026-01-15',
-    category: 'Quality Control',
-    readTime: '4 min read',
-  },
-];
+// Articles (Insights) are now loaded dynamically from Supabase via the store.
 
 export const courses: Course[] = [
   {

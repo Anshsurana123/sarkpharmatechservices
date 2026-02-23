@@ -1,7 +1,17 @@
 import { create } from 'zustand';
-import { sops as initialSops, SOP } from './mockData';
+import { SOP } from './mockData';
 import { supabase } from '@/utils/supabase/client';
 import type { Session } from '@supabase/supabase-js';
+
+export type Insight = {
+    id: string;
+    title: string;
+    excerpt: string;
+    date: string;
+    category: string;
+    read_time: string;
+    file_url?: string;
+};
 
 export type Department = {
     id: string;
@@ -16,6 +26,7 @@ export type Department = {
 interface PharmaStore {
     sops: SOP[];
     departments: Department[];
+    insights: Insight[];
     session: Session | null;
     isInitialized: boolean;
     initialize: () => Promise<void>;
@@ -23,11 +34,14 @@ interface PharmaStore {
     addDepartment: (dept: Omit<Department, 'id' | 'url'>) => Promise<void>;
     deleteSop: (id: string) => Promise<void>;
     deleteDepartment: (id: string) => Promise<void>;
+    addInsight: (insight: Omit<Insight, 'id'>) => Promise<void>;
+    deleteInsight: (id: string) => Promise<void>;
 }
 
 export const usePharmaStore = create<PharmaStore>((set, get) => ({
     sops: [],
     departments: [],
+    insights: [],
     session: null,
     isInitialized: false,
 
@@ -38,6 +52,7 @@ export const usePharmaStore = create<PharmaStore>((set, get) => ({
             // Try fetching from Supabase
             const { data: deptData, error: deptError } = await supabase.from('departments').select('*');
             const { data: sopData, error: sopError } = await supabase.from('sops').select('*');
+            const { data: insightData } = await supabase.from('insights').select('*').order('created_at', { ascending: false });
 
             // Initialize Auth Session
             const { data: { session: initialSession } } = await supabase.auth.getSession();
@@ -56,6 +71,7 @@ export const usePharmaStore = create<PharmaStore>((set, get) => ({
             set({
                 sops: sopData as SOP[],
                 departments: deptData as Department[],
+                insights: (insightData as Insight[]) || [],
                 session: initialSession,
                 isInitialized: true
             });
@@ -134,6 +150,30 @@ export const usePharmaStore = create<PharmaStore>((set, get) => ({
             });
         } catch (e) {
             console.warn('Failed to delete Department from Supabase.', e);
+        }
+    },
+
+    addInsight: async (insight) => {
+        const newInsight: Insight = {
+            ...insight,
+            id: `INS-${Date.now()}`
+        };
+        try {
+            const { error } = await supabase.from('insights').insert([newInsight]);
+            if (error) { console.error('Supabase Insert Error (insight):', error); throw error; }
+            set((state) => ({ insights: [newInsight, ...state.insights] }));
+        } catch (e) {
+            console.warn('Failed to insert Insight to Supabase.', e);
+        }
+    },
+
+    deleteInsight: async (id) => {
+        try {
+            const { error } = await supabase.from('insights').delete().eq('id', id);
+            if (error) { console.error('Supabase Delete Error (insight):', error); throw error; }
+            set((state) => ({ insights: state.insights.filter(i => i.id !== id) }));
+        } catch (e) {
+            console.warn('Failed to delete Insight from Supabase.', e);
         }
     }
 }));

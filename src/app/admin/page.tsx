@@ -10,7 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { FileText, Building2, UploadCloud, Trash2, ShieldCheck } from 'lucide-react';
+import { FileText, Building2, UploadCloud, Trash2, ShieldCheck, Newspaper } from 'lucide-react';
 import { supabase } from '@/utils/supabase/client';
 
 export default function AdminPage() {
@@ -21,6 +21,12 @@ export default function AdminPage() {
     const addDepartment = usePharmaStore(state => state.addDepartment);
     const deleteDepartment = usePharmaStore(state => state.deleteDepartment);
     const departments = usePharmaStore(state => state.departments);
+
+    const addInsight = usePharmaStore(state => state.addInsight);
+    const deleteInsight = usePharmaStore(state => state.deleteInsight);
+    const insights = usePharmaStore(state => state.insights);
+    const initialize = usePharmaStore(state => state.initialize);
+    const isInitialized = usePharmaStore(state => state.isInitialized);
 
     const [sopTitle, setSopTitle] = useState('');
     const [sopDept, setSopDept] = useState('');
@@ -34,6 +40,14 @@ export default function AdminPage() {
     const [deptDesc, setDeptDesc] = useState('');
     const [deptIcon, setDeptIcon] = useState('FileText');
 
+    // Insight form state
+    const [insightTitle, setInsightTitle] = useState('');
+    const [insightExcerpt, setInsightExcerpt] = useState('');
+    const [insightCategory, setInsightCategory] = useState('Regulatory Updates');
+    const [insightReadTime, setInsightReadTime] = useState('5 min read');
+    const [insightFile, setInsightFile] = useState<File | null>(null);
+    const [isInsightUploading, setIsInsightUploading] = useState(false);
+
     // Admin Auth State
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [adminUser, setAdminUser] = useState('');
@@ -45,6 +59,7 @@ export default function AdminPage() {
         if (sessionStorage.getItem('pharma_admin_auth') === 'true') {
             setIsAuthenticated(true);
         }
+        initialize();
     }, []);
 
     const handleLogin = async (e: React.FormEvent) => {
@@ -127,6 +142,46 @@ export default function AdminPage() {
         alert('Department Added Successfully!');
     };
 
+    const handleAddInsight = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!insightTitle || !insightExcerpt) return;
+        setIsInsightUploading(true);
+
+        let file_url: string | undefined = undefined;
+
+        if (insightFile) {
+            const fileName = `INS-${Date.now()}-${insightFile.name.replace(/[^a-zA-Z0-9.]/g, '_')}`;
+            const { data, error } = await supabase.storage.from('insights').upload(fileName, insightFile);
+            if (error) {
+                console.error('Insight file upload error:', error);
+                alert('Failed to upload the document. Please try again.');
+                setIsInsightUploading(false);
+                return;
+            } else if (data) {
+                const { data: publicData } = supabase.storage.from('insights').getPublicUrl(fileName);
+                file_url = publicData.publicUrl;
+            }
+        }
+
+        await addInsight({
+            title: insightTitle,
+            excerpt: insightExcerpt,
+            date: new Date().toISOString().split('T')[0],
+            category: insightCategory,
+            read_time: insightReadTime,
+            file_url
+        });
+
+        // Reset form
+        setInsightTitle('');
+        setInsightExcerpt('');
+        setInsightFile(null);
+        setIsInsightUploading(false);
+        const el = document.getElementById('insight-file-upload') as HTMLInputElement;
+        if (el) el.value = '';
+        alert('Insight Added Successfully!');
+    };
+
     if (!isAuthenticated) {
         return (
             <div className="flex min-h-[60vh] items-center justify-center p-4">
@@ -188,6 +243,9 @@ export default function AdminPage() {
                     </TabsTrigger>
                     <TabsTrigger value="departments" className="flex items-center gap-2">
                         <Building2 className="h-4 w-4" /> Departments
+                    </TabsTrigger>
+                    <TabsTrigger value="insights" className="flex items-center gap-2">
+                        <Newspaper className="h-4 w-4" /> Insights
                     </TabsTrigger>
                 </TabsList>
 
@@ -372,6 +430,127 @@ export default function AdminPage() {
                                                 onClick={async () => {
                                                     if (confirm('Are you sure you want to delete this department?')) {
                                                         await deleteDepartment(dept.id);
+                                                    }
+                                                }}
+                                            >
+                                                <Trash2 className="h-4 w-4" />
+                                            </Button>
+                                        </div>
+                                    ))
+                                )}
+                            </div>
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+
+                <TabsContent value="insights">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Add New Insight</CardTitle>
+                            <CardDescription>Publish a new article or insight to the home page. Optionally attach a Word document for download.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <form onSubmit={handleAddInsight} className="space-y-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="insightTitle">Title</Label>
+                                    <Input
+                                        id="insightTitle"
+                                        placeholder="e.g., FDA Updates Guidance on Sterile Manufacturing"
+                                        value={insightTitle}
+                                        onChange={(e) => setInsightTitle(e.target.value)}
+                                        required
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="insightExcerpt">Description</Label>
+                                    <Textarea
+                                        id="insightExcerpt"
+                                        placeholder="A short summary of the insight (shown on the home page card)..."
+                                        className="min-h-[100px]"
+                                        value={insightExcerpt}
+                                        onChange={(e) => setInsightExcerpt(e.target.value)}
+                                        required
+                                    />
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                        <Label>Category</Label>
+                                        <Select value={insightCategory} onValueChange={setInsightCategory}>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Select category" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="Regulatory Updates">Regulatory Updates</SelectItem>
+                                                <SelectItem value="Quality Assurance">Quality Assurance</SelectItem>
+                                                <SelectItem value="Quality Control">Quality Control</SelectItem>
+                                                <SelectItem value="Microbiology">Microbiology</SelectItem>
+                                                <SelectItem value="Supply Chain">Supply Chain</SelectItem>
+                                                <SelectItem value="Manufacturing">Manufacturing</SelectItem>
+                                                <SelectItem value="General">General</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label>Estimated Read Time</Label>
+                                        <Select value={insightReadTime} onValueChange={setInsightReadTime}>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Select read time" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="2 min read">2 min read</SelectItem>
+                                                <SelectItem value="3 min read">3 min read</SelectItem>
+                                                <SelectItem value="5 min read">5 min read</SelectItem>
+                                                <SelectItem value="7 min read">7 min read</SelectItem>
+                                                <SelectItem value="10 min read">10 min read</SelectItem>
+                                                <SelectItem value="15 min read">15 min read</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                </div>
+                                <div className="space-y-2 pt-2 border-t">
+                                    <Label htmlFor="insight-file-upload" className="flex items-center gap-2">
+                                        <UploadCloud className="h-4 w-4" /> Word Document (Optional)
+                                    </Label>
+                                    <div className="flex items-center gap-4">
+                                        <Input
+                                            id="insight-file-upload"
+                                            type="file"
+                                            accept=".doc,.docx"
+                                            onChange={(e) => setInsightFile(e.target.files?.[0] || null)}
+                                        />
+                                        {insightFile && <span className="text-xs text-muted-foreground whitespace-nowrap">{Math.round(insightFile.size / 1024)} KB</span>}
+                                    </div>
+                                    <p className="text-xs text-muted-foreground">If provided, users will see a &quot;Download Document&quot; button on the insight card.</p>
+                                </div>
+                                <Button type="submit" className="w-full mt-4" disabled={isInsightUploading}>
+                                    {isInsightUploading ? 'Publishing...' : 'Publish Insight'}
+                                </Button>
+                            </form>
+                        </CardContent>
+                    </Card>
+
+                    <Card className="mt-6 border-destructive/20">
+                        <CardHeader>
+                            <CardTitle className="text-destructive">Manage Insights</CardTitle>
+                            <CardDescription>Remove insights from the home page permanently.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="space-y-4">
+                                {insights.length === 0 ? (
+                                    <p className="text-sm text-muted-foreground">No insights published yet.</p>
+                                ) : (
+                                    insights.map(insight => (
+                                        <div key={insight.id} className="flex items-center justify-between p-3 rounded-md border bg-muted/20">
+                                            <div>
+                                                <p className="font-medium text-sm">{insight.title}</p>
+                                                <p className="text-xs text-muted-foreground">{insight.date} • {insight.category}</p>
+                                            </div>
+                                            <Button
+                                                variant="destructive"
+                                                size="sm"
+                                                onClick={async () => {
+                                                    if (confirm('Are you sure you want to remove this insight?')) {
+                                                        await deleteInsight(insight.id);
                                                     }
                                                 }}
                                             >

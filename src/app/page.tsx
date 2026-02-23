@@ -1,10 +1,21 @@
+'use client';
+
+import { useEffect } from 'react';
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { ArrowRight, FileText, ShieldCheck } from "lucide-react";
-import { articles } from "@/data/mockData";
 import { ArticleCard } from "@/components/shared/ArticleCard";
 import Link from "next/link";
+import { usePharmaStore } from "@/data/store";
 
 export default function Home() {
+  const insights = usePharmaStore(state => state.insights);
+  const initialize = usePharmaStore(state => state.initialize);
+
+  useEffect(() => {
+    initialize();
+  }, [initialize]);
+
   return (
     <div className="flex flex-col gap-12 pb-10">
       {/* Hero Section */}
@@ -49,21 +60,33 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Recent Updates Grid */}
+      {/* Recent Insights Grid */}
       <section className="space-y-6">
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-bold tracking-tight">Recent Insights</h2>
-          <Button variant="ghost" className="text-primary hover:text-primary/90" asChild><Link href="#">View all</Link></Button>
+          <Button variant="ghost" className="text-primary hover:text-primary/90" asChild>
+            <Link href="#">View all</Link>
+          </Button>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {articles.map((article) => (
-            <ArticleCard key={article.id} {...article} />
-          ))}
-        </div>
+        {insights.length === 0 ? (
+          <p className="text-muted-foreground text-sm">No insights published yet. Check back soon.</p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {insights.map((insight) => (
+              <ArticleCard
+                key={insight.id}
+                id={insight.id}
+                title={insight.title}
+                excerpt={insight.excerpt}
+                date={insight.date}
+                category={insight.category}
+                readTime={insight.read_time}
+                file_url={insight.file_url}
+              />
+            ))}
+          </div>
+        )}
       </section>
     </div>
   );
 }
-
-// Importing Badge for the hero section
-import { Badge } from "@/components/ui/badge";
