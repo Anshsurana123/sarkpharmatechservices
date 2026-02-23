@@ -88,7 +88,7 @@ export default function AuthPage() {
                     </div>
                     <CardTitle className="text-2xl font-bold">Welcome Back</CardTitle>
                     <CardDescription>
-                        Sign in to your PharmaModern account to continue
+                        Sign in to your Sark Pharma Tech Services account to continue
                     </CardDescription>
                 </CardHeader>
                 <CardContent>

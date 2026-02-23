@@ -26,7 +26,7 @@ export default function Home() {
             v2.0 Beta Now Live
           </Badge>
           <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight">
-            The Total Pharmaceutical Solution
+            Sark Pharma Tech Services
           </h1>
           <p className="text-lg md:text-xl text-primary-foreground/80 font-medium">
             Streamline your quality management, track regulatory updates, and ensure compliance with our modern, AI-powered platform.

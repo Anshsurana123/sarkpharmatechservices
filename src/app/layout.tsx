@@ -17,8 +17,8 @@ import { AppSidebar } from "@/components/layout/Sidebar";
 import { Topbar } from "@/components/layout/Topbar";
 
 export const metadata: Metadata = {
-  title: "PharmaModern | Total Pharmaceutical Solution",
-  description: "Modern pharmaceutical resource and SOP database.",
+  title: "Sark Pharma Tech Services | Total Pharmaceutical Solution",
+  description: "Sark Pharma Tech Services — pharmaceutical SOP database, regulatory insights, and compliance resources.",
 };
 
 export default function RootLayout({

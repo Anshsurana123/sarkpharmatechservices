@@ -58,7 +58,7 @@ export const useRazorpay = () => {
                 key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || '', // We need to expose this to the client
                 amount: amountInSubunits.toString(),
                 currency: currency,
-                name: 'PharmaModern Documents',
+                name: 'Sark Pharma Tech Services',
                 description: description,
                 order_id: data.orderId,
                 handler: function (response: any) {

@@ -48,7 +48,7 @@ export function AppSidebar() {
             <SidebarHeader className="h-16 flex items-center px-4 border-b">
                 <div className="flex items-center gap-2 font-bold text-lg text-primary tracking-tight">
                     <ShieldCheck className="h-6 w-6 text-secondary" />
-                    <span>PharmaModern</span>
+                    <span>Sark Pharma Tech</span>
                 </div>
             </SidebarHeader>
             <SidebarContent>
