@@ -46,10 +46,10 @@ export function AppSidebar() {
     return (
         <Sidebar variant="inset">
             <SidebarHeader className="h-16 flex items-center px-4 border-b">
-                <div className="flex items-center gap-2 font-bold text-lg text-primary tracking-tight">
+                <Link href="/" className="flex items-center gap-2 font-bold text-lg text-primary tracking-tight hover:opacity-80 transition-opacity">
                     <ShieldCheck className="h-6 w-6 text-secondary" />
                     <span>Sark Pharma Tech</span>
-                </div>
+                </Link>
             </SidebarHeader>
             <SidebarContent>
                 <SidebarGroup>
