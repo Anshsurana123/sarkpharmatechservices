@@ -18,7 +18,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { FileText, Search, ShoppingCart } from 'lucide-react';
 
-const DOC_TYPES = ['Manual', 'Protocol', 'Checklist'];
+const DOC_TYPES = ['Manual', 'Protocol', 'Checklist', 'Validation Document', 'Regulatory Document', 'Template'];
 
 function SOPDashboardContent() {
     const { processPayment, isProcessing } = useRazorpay();

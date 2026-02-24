@@ -17,7 +17,7 @@ import { Badge } from '@/components/ui/badge';
 import { FileText, Search, BookOpen } from 'lucide-react';
 import Link from 'next/link';
 
-const DOC_TYPES = ['Manual', 'Protocol', 'Checklist'];
+const DOC_TYPES = ['Manual', 'Protocol', 'Checklist', 'Validation Document', 'Regulatory Document', 'Template'];
 
 function LibraryContent() {
     const searchParams = useSearchParams();

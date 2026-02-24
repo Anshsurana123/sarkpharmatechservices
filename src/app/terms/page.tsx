@@ -2,7 +2,7 @@ import { Scale } from "lucide-react";
 
 export const metadata = {
     title: "Terms of Use | Sark Pharma Tech Services",
-    description: "Terms and conditions for using Sark Pharma Tech Services and purchasing SOP documents.",
+    description: "Terms and conditions for using Sark Pharma Tech Services and purchasing SOP documents and online courses.",
 };
 
 const LAST_UPDATED = "24 February 2026";
@@ -33,12 +33,13 @@ export default function TermsOfUsePage() {
                 </section>
 
                 <section>
-                    <h2>2. Licence to Use SOP Documents</h2>
-                    <p>Upon successful purchase, Sark Pharma Tech Services grants you a <strong>non-exclusive, non-transferable, single-facility licence</strong> to use the purchased Standard Operating Procedure (SOP) document for internal operations at one registered site.</p>
+                    <h2>2. Licence to Use Products</h2>
+                    <p>Upon successful purchase, Sark Pharma Tech Services grants you a <strong>non-exclusive, non-transferable, single-facility licence</strong> to use the purchased Standard Operating Procedure (SOP) document or Online Course for internal operations at one registered site.</p>
                     <ul>
-                        <li>You may customise and adapt the document for your facility.</li>
-                        <li>You may <strong>not</strong> resell, redistribute, sublicence, or publicly share the document in its original or modified form.</li>
-                        <li>One purchase covers one site. Multi-site use requires bulk licensing — contact us at <a href="mailto:contact@sarkpharmatech.com">contact@sarkpharmatech.com</a>.</li>
+                        <li>For SOPs, you may customise and adapt the document for your facility.</li>
+                        <li>For Courses, the materials are for the individual or internal team that purchased it.</li>
+                        <li>You may <strong>not</strong> resell, redistribute, sublicence, or publicly share the documents or course materials in their original or modified form.</li>
+                        <li>One purchase covers one site or individual user instance. Multi-site or enterprise training use requires bulk licensing — contact us at <a href="mailto:contact@sarkpharmatech.com">contact@sarkpharmatech.com</a>.</li>
                     </ul>
                 </section>
 
@@ -58,13 +59,13 @@ export default function TermsOfUsePage() {
 
                 <section>
                     <h2>5. Intellectual Property</h2>
-                    <p>All SOP documents, regulatory insights, and platform content are the intellectual property of Sark Pharma Tech Services. Unauthorised reproduction or distribution is prohibited and may result in legal action.</p>
+                    <p>All SOP documents, training course materials, videos, regulatory insights, and platform content are the intellectual property of Sark Pharma Tech Services. Unauthorised reproduction or distribution is prohibited and may result in legal action.</p>
                 </section>
 
                 <section>
                     <h2>6. Disclaimer</h2>
-                    <p>The documents and insights provided on this platform are intended as <strong>starting-point templates and informational resources</strong>. They do not constitute legal, regulatory, or professional advice. You are solely responsible for ensuring that any SOP or document meets the specific requirements of your regulatory authority and facility.</p>
-                    <p>Sark Pharma Tech Services makes no warranties, express or implied, regarding the completeness, accuracy, or fitness for a particular regulatory purpose of any document.</p>
+                    <p>The documents, course materials, and insights provided on this platform are intended as <strong>starting-point templates, training materials, and informational resources</strong>. They do not constitute legal, regulatory, or professional advice. You are solely responsible for ensuring that any SOP, document, or process meets the specific requirements of your regulatory authority and facility.</p>
+                    <p>Sark Pharma Tech Services makes no warranties, express or implied, regarding the completeness, accuracy, or fitness for a particular regulatory purpose of any document or course material.</p>
                 </section>
 
                 <section>

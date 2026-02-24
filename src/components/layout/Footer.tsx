@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ShieldCheck, Mail, Globe } from "lucide-react";
+import { ShieldCheck, Mail, Globe, Phone, MessageCircle } from "lucide-react";
 
 export function Footer() {
     const year = new Date().getFullYear();
@@ -29,8 +29,12 @@ export function Footer() {
                         <ul className="space-y-2 text-sm text-muted-foreground">
                             {[
                                 { label: 'SOP Database', href: '/sops' },
+                                { label: 'Bundles & Packages', href: '/bundles' },
+                                { label: 'Courses & Training', href: '/courses' },
                                 { label: 'SOP Library (Free)', href: '/library' },
-                                { label: 'Regulatory Insights', href: '/' },
+                                { label: 'Regulatory Insights', href: '/insights' },
+                                { label: 'Career Resources', href: '/resources' },
+                                { label: 'Community Forum', href: '/forum' },
                                 { label: 'About Us', href: '/about' },
                             ].map(({ label, href }) => (
                                 <li key={label}>
@@ -52,18 +56,27 @@ export function Footer() {
                             <a href="mailto:contact@sarkpharmatech.com" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors">
                                 <Mail className="h-4 w-4" /> contact@sarkpharmatech.com
                             </a>
-                            <a href="https://sarkpharmatechservices.vercel.app" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors">
-                                <Globe className="h-4 w-4" /> sarkpharmatechservices.vercel.app
+                            <a href="tel:+917350185431" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors">
+                                <Phone className="h-4 w-4" /> +91 73501 85431
                             </a>
+                            <a href="https://wa.me/917350185431" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-muted-foreground hover:text-green-500 transition-colors">
+                                <MessageCircle className="h-4 w-4" /> WhatsApp Us
+                            </a>
+                            <div className="flex items-start gap-2 text-muted-foreground mt-1">
+                                <Globe className="h-4 w-4 mt-0.5 shrink-0" />
+                                <span>Maharashtra, India</span>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <div className="mt-8 pt-6 border-t flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-muted-foreground">
                     <p>© {year} Sark Pharma Tech Services. All rights reserved.</p>
-                    <div className="flex gap-4">
+                    <div className="flex gap-4 flex-wrap justify-center sm:justify-end">
                         <Link href="/privacy" className="hover:text-primary transition-colors">Privacy Policy</Link>
                         <Link href="/terms" className="hover:text-primary transition-colors">Terms of Use</Link>
+                        <Link href="/disclaimer" className="hover:text-primary transition-colors">Disclaimer</Link>
+                        <Link href="/refund" className="hover:text-primary transition-colors">Refund Policy</Link>
                     </div>
                 </div>
             </div>

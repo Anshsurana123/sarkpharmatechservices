@@ -10,7 +10,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { FileText, Building2, UploadCloud, Trash2, ShieldCheck, Newspaper } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { FileText, Building2, UploadCloud, Trash2, ShieldCheck, Newspaper, Users, CreditCard, GraduationCap } from 'lucide-react';
 import { supabase } from '@/utils/supabase/client';
 
 export default function AdminPage() {
@@ -25,6 +26,11 @@ export default function AdminPage() {
     const addInsight = usePharmaStore(state => state.addInsight);
     const deleteInsight = usePharmaStore(state => state.deleteInsight);
     const insights = usePharmaStore(state => state.insights);
+
+    const addCourse = usePharmaStore(state => state.addCourse);
+    const deleteCourse = usePharmaStore(state => state.deleteCourse);
+    const courses = usePharmaStore(state => state.courses);
+
     const initialize = usePharmaStore(state => state.initialize);
     const isInitialized = usePharmaStore(state => state.isInitialized);
 
@@ -47,12 +53,49 @@ export default function AdminPage() {
     const [insightFile, setInsightFile] = useState<File | null>(null);
     const [isInsightUploading, setIsInsightUploading] = useState(false);
 
+    // Course form state
+    const [courseTitle, setCourseTitle] = useState('');
+    const [courseDesc, setCourseDesc] = useState('');
+    const [coursePrice, setCoursePrice] = useState('');
+    const [courseDuration, setCourseDuration] = useState('');
+    const [courseLevel, setCourseLevel] = useState('Beginner');
+    const [courseModules, setCourseModules] = useState('');
+    const [courseFiles, setCourseFiles] = useState<File[]>([]);
+    const [isCourseUploading, setIsCourseUploading] = useState(false);
+
     // Admin Auth State
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [adminUser, setAdminUser] = useState('');
     const [adminPass, setAdminPass] = useState('');
     const [authError, setAuthError] = useState('');
     const [isAuthenticating, setIsAuthenticating] = useState(false);
+
+    // Dashboard Data
+    const [transactions, setTransactions] = useState<any[]>([]);
+    const [usersList, setUsersList] = useState<any[]>([
+        { id: '1', email: 'rupesh.surana@example.com', role: 'Admin', joined: '2025-01-10' },
+        { id: '2', email: 'qa.manager@pharmaco.com', role: 'User', joined: '2026-02-15' },
+        { id: '3', email: 'auditor.smith@agency.gov', role: 'User', joined: '2026-02-18' },
+    ]);
+    const [isLoadingAdminData, setIsLoadingAdminData] = useState(false);
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            fetchAdminData();
+        }
+    }, [isAuthenticated]);
+
+    const fetchAdminData = async () => {
+        setIsLoadingAdminData(true);
+        try {
+            const { data } = await supabase.from('transactions').select('*').order('created_at', { ascending: false });
+            if (data) setTransactions(data);
+        } catch (e) {
+            console.error('Error fetching admin data', e);
+        } finally {
+            setIsLoadingAdminData(false);
+        }
+    };
 
     useEffect(() => {
         if (sessionStorage.getItem('pharma_admin_auth') === 'true') {
@@ -181,6 +224,55 @@ export default function AdminPage() {
         alert('Insight Added Successfully!');
     };
 
+    const handleAddCourse = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!courseTitle || !courseDesc || !coursePrice) return;
+        setIsCourseUploading(true);
+
+        const uploadedFiles: { name: string, url: string, type: string }[] = [];
+
+        if (courseFiles.length > 0) {
+            for (const file of courseFiles) {
+                const fileName = `CRS-${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.]/g, '_')}`;
+                const { data, error } = await supabase.storage.from('courses').upload(fileName, file);
+
+                if (error) {
+                    console.error('Course file upload error:', error);
+                    alert(`Failed to upload ${file.name}.`);
+                } else if (data) {
+                    const { data: publicData } = supabase.storage.from('courses').getPublicUrl(fileName);
+                    uploadedFiles.push({
+                        name: file.name,
+                        url: publicData.publicUrl,
+                        type: file.type || 'file'
+                    });
+                }
+            }
+        }
+
+        await addCourse({
+            title: courseTitle,
+            description: courseDesc,
+            price: Number(coursePrice),
+            duration: courseDuration,
+            level: courseLevel,
+            modules: courseModules.split(',').map(m => m.trim()).filter(Boolean),
+            files: uploadedFiles
+        });
+
+        setCourseTitle('');
+        setCourseDesc('');
+        setCoursePrice('');
+        setCourseDuration('');
+        setCourseLevel('Beginner');
+        setCourseModules('');
+        setCourseFiles([]);
+        setIsCourseUploading(false);
+        const el = document.getElementById('course-files-upload') as HTMLInputElement;
+        if (el) el.value = '';
+        alert('Course Added Successfully!');
+    };
+
     if (!isAuthenticated) {
         return (
             <div className="flex min-h-[60vh] items-center justify-center p-4">
@@ -246,6 +338,15 @@ export default function AdminPage() {
                     <TabsTrigger value="insights" className="flex items-center gap-2">
                         <Newspaper className="h-4 w-4" /> Insights
                     </TabsTrigger>
+                    <TabsTrigger value="users" className="flex items-center gap-2">
+                        <Users className="h-4 w-4" /> Users
+                    </TabsTrigger>
+                    <TabsTrigger value="payments" className="flex items-center gap-2">
+                        <CreditCard className="h-4 w-4" /> Payments
+                    </TabsTrigger>
+                    <TabsTrigger value="courses" className="flex items-center gap-2">
+                        <GraduationCap className="h-4 w-4" /> Courses
+                    </TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="sops">
@@ -290,6 +391,9 @@ export default function AdminPage() {
                                                 <SelectItem value="Manual">Manual</SelectItem>
                                                 <SelectItem value="Protocol">Protocol</SelectItem>
                                                 <SelectItem value="Checklist">Checklist</SelectItem>
+                                                <SelectItem value="Validation Document">Validation Document</SelectItem>
+                                                <SelectItem value="Regulatory Document">Regulatory Document</SelectItem>
+                                                <SelectItem value="Template">Template</SelectItem>
                                             </SelectContent>
                                         </Select>
                                     </div>
@@ -550,6 +654,215 @@ export default function AdminPage() {
                                                 onClick={async () => {
                                                     if (confirm('Are you sure you want to remove this insight?')) {
                                                         await deleteInsight(insight.id);
+                                                    }
+                                                }}
+                                            >
+                                                <Trash2 className="h-4 w-4" />
+                                            </Button>
+                                        </div>
+                                    ))
+                                )}
+                            </div>
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+
+                <TabsContent value="users">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>User Management</CardTitle>
+                            <CardDescription>View registered users. Full Supabase Auth sync coming soon.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="space-y-4">
+                                {usersList.map(user => (
+                                    <div key={user.id} className="flex items-center justify-between p-3 rounded-md border bg-muted/20">
+                                        <div className="flex items-center gap-3">
+                                            <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center">
+                                                <Users className="h-4 w-4 text-primary" />
+                                            </div>
+                                            <div>
+                                                <p className="font-medium text-sm">{user.email}</p>
+                                                <p className="text-xs text-muted-foreground">Joined: {user.joined}</p>
+                                            </div>
+                                        </div>
+                                        <Badge variant={user.role === 'Admin' ? 'default' : 'secondary'}>{user.role}</Badge>
+                                    </div>
+                                ))}
+                            </div>
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+
+                <TabsContent value="payments">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Transactions Ledger</CardTitle>
+                            <CardDescription>Track successful purchases of SOPs, Bundles, and Courses.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            {isLoadingAdminData ? (
+                                <div className="py-8 text-center text-muted-foreground animate-pulse">Loading transactions...</div>
+                            ) : transactions.length === 0 ? (
+                                <div className="flex flex-col items-center justify-center p-8 text-center bg-muted/20 border rounded-lg border-dashed">
+                                    <CreditCard className="h-10 w-10 text-muted-foreground/50 mb-4" />
+                                    <h3 className="font-semibold text-lg">No Transactions Yet</h3>
+                                    <p className="text-sm text-muted-foreground mt-2 max-w-sm mb-6">
+                                        Sales recorded via Razorpay will appear here.
+                                    </p>
+                                    <Button variant="outline" asChild>
+                                        <a href="https://dashboard.razorpay.com/" target="_blank" rel="noopener noreferrer">
+                                            Open Razorpay Dashboard
+                                        </a>
+                                    </Button>
+                                </div>
+                            ) : (
+                                <div className="space-y-4">
+                                    {transactions.map(tx => (
+                                        <div key={tx.id} className="flex items-center justify-between p-3 rounded-md border bg-muted/20">
+                                            <div>
+                                                <p className="font-medium text-sm">{tx.item_name}</p>
+                                                <p className="text-xs text-muted-foreground">ID: {tx.payment_id} • {new Date(tx.created_at).toLocaleString()}</p>
+                                            </div>
+                                            <div className="text-right">
+                                                <p className="font-bold text-sm text-green-600">+{tx.currency} {tx.amount.toLocaleString()}</p>
+                                                <Badge variant="outline" className="text-[10px] mt-1 bg-green-500/10 text-green-600 border-none">Completed</Badge>
+                                            </div>
+                                        </div>
+                                    ))}
+                                    <div className="pt-4 border-t flex justify-between items-center px-2">
+                                        <span className="font-bold">Total Sales</span>
+                                        <span className="font-bold text-lg text-green-600">
+                                            INR {transactions.filter(t => t.currency === 'INR').reduce((acc, curr) => acc + Number(curr.amount), 0).toLocaleString()}
+                                            {' | '}
+                                            USD {transactions.filter(t => t.currency === 'USD').reduce((acc, curr) => acc + Number(curr.amount), 0).toLocaleString()}
+                                        </span>
+                                    </div>
+                                </div>
+                            )}
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+
+                <TabsContent value="courses">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Add New Course</CardTitle>
+                            <CardDescription>Create a new online training program for purchase.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <form onSubmit={handleAddCourse} className="space-y-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="courseTitle">Course Title</Label>
+                                    <Input
+                                        id="courseTitle"
+                                        placeholder="e.g., Advanced GMP Auditing"
+                                        value={courseTitle}
+                                        onChange={(e) => setCourseTitle(e.target.value)}
+                                        required
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="courseDesc">Description</Label>
+                                    <Textarea
+                                        id="courseDesc"
+                                        placeholder="Detailed description of the course..."
+                                        value={courseDesc}
+                                        onChange={(e) => setCourseDesc(e.target.value)}
+                                        required
+                                    />
+                                </div>
+                                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                                    <div className="space-y-2">
+                                        <Label htmlFor="coursePrice">Price ($)</Label>
+                                        <Input
+                                            id="coursePrice"
+                                            type="number"
+                                            placeholder="e.g., 299"
+                                            value={coursePrice}
+                                            onChange={(e) => setCoursePrice(e.target.value)}
+                                            required
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="courseDuration">Duration</Label>
+                                        <Input
+                                            id="courseDuration"
+                                            placeholder="e.g., 4 Weeks"
+                                            value={courseDuration}
+                                            onChange={(e) => setCourseDuration(e.target.value)}
+                                            required
+                                        />
+                                    </div>
+                                    <div className="space-y-2 lg:col-span-2">
+                                        <Label>Level</Label>
+                                        <Select value={courseLevel} onValueChange={setCourseLevel}>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Select level" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="Beginner">Beginner</SelectItem>
+                                                <SelectItem value="Intermediate">Intermediate</SelectItem>
+                                                <SelectItem value="Advanced">Advanced</SelectItem>
+                                                <SelectItem value="Expert">Expert</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="courseModules">Modules (comma separated)</Label>
+                                    <Input
+                                        id="courseModules"
+                                        placeholder="e.g., Module 1: Intro to GMP, Module 2: Auditing Techniques..."
+                                        value={courseModules}
+                                        onChange={(e) => setCourseModules(e.target.value)}
+                                        required
+                                    />
+                                </div>
+                                <div className="space-y-2 pt-2 border-t">
+                                    <Label htmlFor="course-files-upload" className="flex items-center gap-2">
+                                        <UploadCloud className="h-4 w-4" /> Course Materials (Videos, Images, Files)
+                                    </Label>
+                                    <div className="flex items-center gap-4">
+                                        <Input
+                                            id="course-files-upload"
+                                            type="file"
+                                            multiple
+                                            onChange={(e) => setCourseFiles(e.target.files ? Array.from(e.target.files) : [])}
+                                        />
+                                        {courseFiles.length > 0 && <span className="text-xs text-muted-foreground whitespace-nowrap">{courseFiles.length} files selected</span>}
+                                    </div>
+                                    <p className="text-xs text-muted-foreground">Upload the course content. Users will be given access to these files after successful payment.</p>
+                                </div>
+                                <Button type="submit" className="w-full mt-4" disabled={isCourseUploading}>
+                                    {isCourseUploading ? 'Uploading & Creating...' : 'Create Course'}
+                                </Button>
+                            </form>
+                        </CardContent>
+                    </Card>
+
+                    <Card className="mt-6 border-destructive/20">
+                        <CardHeader>
+                            <CardTitle className="text-destructive">Manage Courses</CardTitle>
+                            <CardDescription>Permanently remove courses from the platform.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="space-y-4">
+                                {courses.length === 0 ? (
+                                    <p className="text-sm text-muted-foreground">No courses created yet.</p>
+                                ) : (
+                                    courses.map(course => (
+                                        <div key={course.id} className="flex items-center justify-between p-3 rounded-md border bg-muted/20">
+                                            <div>
+                                                <p className="font-medium text-sm">{course.title}</p>
+                                                <p className="text-xs text-muted-foreground">${course.price} • {course.level}</p>
+                                            </div>
+                                            <Button
+                                                variant="destructive"
+                                                size="sm"
+                                                onClick={async () => {
+                                                    if (confirm('Are you sure you want to delete this course?')) {
+                                                        await deleteCourse(course.id);
                                                     }
                                                 }}
                                             >

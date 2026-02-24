@@ -33,7 +33,7 @@ export default function PrivacyPolicyPage() {
                     <ul>
                         <li><strong>Contact form data</strong> — name, email address, and message content submitted via our contact form (processed by Formspree).</li>
                         <li><strong>Usage data</strong> — pages visited, time spent, browser type, and referring URL, collected via Vercel Analytics.</li>
-                        <li><strong>Payment data</strong> — order amounts and currency for SOP purchases, processed securely by Razorpay. We do not store card or UPI details.</li>
+                        <li><strong>Payment data</strong> — order amounts and currency for SOP and Course purchases, processed securely by Razorpay. We do not store card or UPI details.</li>
                         <li><strong>Authentication data</strong> — email address and provider details when you sign in via Google or LinkedIn (managed by Supabase Auth).</li>
                     </ul>
                 </section>
@@ -42,7 +42,7 @@ export default function PrivacyPolicyPage() {
                     <h2>2. How We Use Your Information</h2>
                     <ul>
                         <li>To respond to enquiries submitted through the contact form.</li>
-                        <li>To process SOP purchase orders and deliver licensed documents.</li>
+                        <li>To process purchase orders and deliver licensed documents or course access.</li>
                         <li>To improve the platform through anonymised usage analytics.</li>
                         <li>To authenticate users and maintain secure sessions.</li>
                     </ul>

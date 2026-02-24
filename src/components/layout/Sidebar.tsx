@@ -13,14 +13,18 @@ import {
     SidebarMenuItem,
     SidebarFooter,
 } from '@/components/ui/sidebar';
-import { FileText, FlaskConical, ShieldCheck, Stethoscope, Settings, Beaker, BriefcaseMedical, Cross, Microscope, BookOpen, Info, User } from 'lucide-react';
+import { FileText, FlaskConical, ShieldCheck, Stethoscope, Settings, Beaker, BriefcaseMedical, Cross, Microscope, BookOpen, Info, User, GraduationCap, PackageOpen, Wrench, Users } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { usePharmaStore } from '@/data/store';
 
 const mainNavItems = [
     { title: 'SOP Database', url: '/sops', icon: FileText },
+    { title: 'Bundles & Packages', url: '/bundles', icon: PackageOpen },
+    { title: 'Courses & Training', url: '/courses', icon: GraduationCap },
     { title: 'SOP Library', url: '/library', icon: BookOpen },
+    { title: 'Career Resources', url: '/resources', icon: Wrench },
+    { title: 'Community Forum', url: '/forum', icon: Users },
 ];
 
 const iconMap: Record<string, any> = {

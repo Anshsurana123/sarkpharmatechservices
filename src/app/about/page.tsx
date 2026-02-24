@@ -2,7 +2,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ShieldCheck, BookOpen, FileText, Lightbulb, Mail, Globe, Send } from "lucide-react";
+import { ShieldCheck, BookOpen, FileText, Lightbulb, Mail, Globe, Send, Phone, MessageCircle, Target, Eye, Award } from "lucide-react";
 
 export default function AboutPage() {
     return (
@@ -27,13 +27,79 @@ export default function AboutPage() {
 
             {/* Mission */}
             <section className="space-y-4">
-                <h2 className="text-2xl font-bold tracking-tight">Our Mission</h2>
+                <div className="flex items-center gap-3">
+                    <div className="h-9 w-9 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                        <Target className="h-5 w-5" />
+                    </div>
+                    <h2 className="text-2xl font-bold tracking-tight">Our Mission</h2>
+                </div>
                 <p className="text-muted-foreground leading-relaxed text-base">
                     Sark Pharma Tech Services was built to bridge the gap between the complexity of pharmaceutical regulations and the day-to-day operations of quality professionals. We provide structured, editable, and professionally authored Standard Operating Procedures (SOPs) that help pharmaceutical manufacturers, research labs, and regulatory teams stay audit-ready and compliant at all times.
                 </p>
+                <ul className="space-y-2 text-muted-foreground text-sm">
+                    {["Support pharma professionals with ready-to-use GMP-compliant documentation", "Improve GMP compliance across pharmaceutical manufacturing facilities", "Provide ready-to-use, editable SOPs and regulatory templates", "Deliver affordable access to pharmaceutical knowledge for organisations of all sizes"].map(m => (
+                        <li key={m} className="flex items-start gap-2"><ShieldCheck className="h-4 w-4 text-primary mt-0.5 shrink-0" />{m}</li>
+                    ))}
+                </ul>
+            </section>
+
+            {/* Vision */}
+            <section className="space-y-4">
+                <div className="flex items-center gap-3">
+                    <div className="h-9 w-9 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                        <Eye className="h-5 w-5" />
+                    </div>
+                    <h2 className="text-2xl font-bold tracking-tight">Our Vision</h2>
+                </div>
                 <p className="text-muted-foreground leading-relaxed text-base">
-                    Whether you&apos;re a startup building your QMS from scratch or an established manufacturer looking to strengthen documentation — we have the tools, templates, and insights you need.
+                    To become the world&apos;s most trusted and comprehensive pharmaceutical knowledge platform — empowering every GMP facility, from emerging startups to global manufacturers, with the documentation, education, and regulatory intelligence they need to operate at the highest standards of quality.
                 </p>
+            </section>
+
+            {/* Founder / Leadership */}
+            <section className="space-y-6">
+                <div className="flex items-center gap-3">
+                    <div className="h-9 w-9 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                        <Award className="h-5 w-5" />
+                    </div>
+                    <h2 className="text-2xl font-bold tracking-tight">Founder &amp; Leadership</h2>
+                </div>
+                <Card className="border shadow-sm overflow-hidden">
+                    <div className="bg-gradient-to-r from-primary/10 to-secondary/10 border-b px-6 py-4 flex items-center gap-5">
+                        <div className="h-16 w-16 rounded-2xl bg-primary/20 flex items-center justify-center text-primary shrink-0 text-2xl font-extrabold">
+                            RS
+                        </div>
+                        <div>
+                            <p className="font-bold text-lg">Rupesh Surana</p>
+                            <p className="text-muted-foreground text-sm">Founder, Pharmaceutical Quality &amp; Compliance Expert</p>
+                        </div>
+                    </div>
+                    <CardContent className="pt-5 space-y-4">
+                        <p className="text-sm text-muted-foreground leading-relaxed">
+                            With over a decade of hands-on experience in the pharmaceutical industry, our founder has worked across Quality Assurance, Quality Control, Regulatory Affairs, and Production departments in licensed pharmaceutical manufacturing facilities.
+                        </p>
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
+                            {[
+                                { label: "Experience", value: "17+ Years in Pharma" },
+                                { label: "Qualification", value: "M.Pharm / Pharma Sciences" },
+                                { label: "Expertise", value: "QA, QC, Regulatory, GMP" },
+                            ].map(({ label, value }) => (
+                                <div key={label} className="bg-muted/30 rounded-xl p-3">
+                                    <p className="text-xs text-muted-foreground mb-0.5">{label}</p>
+                                    <p className="font-semibold">{value}</p>
+                                </div>
+                            ))}
+                        </div>
+                        <div>
+                            <p className="text-xs text-muted-foreground font-medium mb-2 uppercase tracking-wide">Areas of Expertise</p>
+                            <div className="flex flex-wrap gap-2">
+                                {["QA", "QC", "Regulatory Affairs", "Production", "IT", "SHE", "Pharmacovigilance", "Warehouses", "HR & Admin", "Packaging Development", "Formulation & Dev", "Technology Transfer", "Engineering"].map(area => (
+                                    <Badge key={area} variant="secondary" className="text-xs px-2 py-0.5">{area}</Badge>
+                                ))}
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
             </section>
 
             {/* What we offer */}
@@ -118,12 +184,30 @@ export default function AboutPage() {
                     </form>
 
                     {/* Contact details */}
-                    <div className="space-y-6 flex flex-col justify-center">
+                    <div className="space-y-4 flex flex-col justify-center">
                         <div>
                             <p className="font-semibold text-sm mb-1">Email Us</p>
                             <a href="mailto:contact@sarkpharmatech.com" className="flex items-center gap-2 text-primary hover:underline text-sm">
                                 <Mail className="h-4 w-4" /> contact@sarkpharmatech.com
                             </a>
+                        </div>
+                        <div>
+                            <p className="font-semibold text-sm mb-1">Call Us</p>
+                            <a href="tel:+917350185431" className="flex items-center gap-2 text-primary hover:underline text-sm">
+                                <Phone className="h-4 w-4" /> +91 73501 85431
+                            </a>
+                        </div>
+                        <div>
+                            <p className="font-semibold text-sm mb-1">WhatsApp</p>
+                            <a href="https://wa.me/917350185431" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-green-600 hover:underline text-sm">
+                                <MessageCircle className="h-4 w-4" /> Chat on WhatsApp
+                            </a>
+                        </div>
+                        <div>
+                            <p className="font-semibold text-sm mb-1">Location</p>
+                            <div className="flex items-center gap-2 text-muted-foreground text-sm">
+                                <Globe className="h-4 w-4" /> Maharashtra, India
+                            </div>
                         </div>
                         <div>
                             <p className="font-semibold text-sm mb-1">Website</p>

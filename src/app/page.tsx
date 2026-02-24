@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight, FileText, ShieldCheck, Sparkles, FlaskConical, Microscope, ClipboardCheck, BookOpen } from "lucide-react";
+import { ArrowRight, FileText, ShieldCheck, Sparkles, FlaskConical, Microscope, ClipboardCheck, BookOpen, Star, Quote, Building2, Beaker, GraduationCap } from "lucide-react";
 import { ArticleCard } from "@/components/shared/ArticleCard";
 import Link from "next/link";
 import Image from "next/image";
@@ -121,22 +121,66 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── Popular Departments ─────────────────────────── */}
+      <section className="space-y-6">
+        <div className="flex flex-col items-center text-center max-w-2xl mx-auto mb-4">
+          <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Browse by Department</h2>
+          <p className="text-muted-foreground mt-2 text-sm md:text-base">
+            Find specific documents tailored to your operational area.
+          </p>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {[
+            { name: "Quality Assurance", icon: ShieldCheck, query: "qa" },
+            { name: "Quality Control", icon: Beaker, query: "qc" },
+            { name: "Microbiology", icon: Microscope, query: "micro" },
+            { name: "Manufacturing", icon: Building2, query: "" },
+          ].map((dept, i) => (
+            <Link key={i} href={`/sops${dept.query ? `?dept=${dept.query}` : ''}`} className="group block">
+              <div className="bg-card border rounded-2xl p-5 flex flex-col items-center text-center gap-3 hover:border-primary/40 hover:shadow-md transition-all">
+                <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                  <dept.icon className="h-6 w-6" />
+                </div>
+                <p className="font-semibold text-sm">{dept.name}</p>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
       {/* ── Feature Cards ───────────────────────────────── */}
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="group bg-card text-card-foreground rounded-2xl p-6 border shadow-sm hover:shadow-lg hover:border-primary/30 transition-all duration-300">
           <div className="h-12 w-12 rounded-xl bg-primary/10 dark:bg-primary/20 flex items-center justify-center mb-4 text-primary group-hover:scale-110 transition-transform duration-300">
             <FileText className="h-6 w-6" />
           </div>
           <h3 className="text-xl font-semibold mb-2">Editable SOP Database</h3>
-          <p className="text-muted-foreground text-sm leading-relaxed">Access 500+ professionally authored SOPs for Quality Assurance, QC, Production, Microbiology, and Regulatory Affairs — delivered as MS Word files ready for your facility's customisation.</p>
+          <p className="text-muted-foreground text-sm leading-relaxed mb-4">Access 500+ professionally authored SOPs for Quality Assurance, QC, Production, and more — delivered as MS Word files.</p>
+          <Button variant="outline" className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors" asChild>
+            <Link href="/sops">Browse SOPs</Link>
+          </Button>
         </div>
 
         <div className="group bg-card text-card-foreground rounded-2xl p-6 border shadow-sm hover:shadow-lg hover:border-primary/30 transition-all duration-300">
           <div className="h-12 w-12 rounded-xl bg-secondary/10 dark:bg-primary/20 flex items-center justify-center mb-4 text-secondary dark:text-primary group-hover:scale-110 transition-transform duration-300">
             <ShieldCheck className="h-6 w-6" />
           </div>
-          <h3 className="text-xl font-semibold mb-2">GMP &amp; Regulatory Compliance</h3>
-          <p className="text-muted-foreground text-sm leading-relaxed">Every document is structured in alignment with FDA 21 CFR, ICH Q7/Q10, WHO GMP, and EU GMP requirements — keeping you audit-ready at all times.</p>
+          <h3 className="text-xl font-semibold mb-2">GMP Compliance</h3>
+          <p className="text-muted-foreground text-sm leading-relaxed mb-4">Every document is structured in alignment with FDA 21 CFR, ICH Q7/Q10, WHO GMP, and EU GMP requirements.</p>
+          <Button variant="outline" className="w-full group-hover:bg-secondary group-hover:text-secondary-foreground transition-colors" asChild>
+            <Link href="/bundles">View QMS Bundles</Link>
+          </Button>
+        </div>
+
+        <div className="group bg-card text-card-foreground rounded-2xl p-6 border shadow-sm hover:shadow-lg hover:border-primary/30 transition-all duration-300 md:col-span-3 lg:col-span-1">
+          <div className="h-12 w-12 rounded-xl bg-blue-500/10 dark:bg-blue-500/20 flex items-center justify-center mb-4 text-blue-500 group-hover:scale-110 transition-transform duration-300">
+            <GraduationCap className="h-6 w-6" />
+          </div>
+          <h3 className="text-xl font-semibold mb-2">Expert Training Courses</h3>
+          <p className="text-muted-foreground text-sm leading-relaxed mb-4">Master complex GMP requirements with our upcoming online certification programs for QA and Regulatory teams.</p>
+          <Button variant="outline" className="w-full group-hover:border-blue-500 group-hover:text-blue-600 transition-colors" asChild>
+            <Link href="/courses">Explore Courses</Link>
+          </Button>
         </div>
 
         <div className="group bg-card text-card-foreground rounded-2xl p-6 border shadow-sm hover:shadow-lg hover:border-primary/30 transition-all duration-300">
@@ -156,13 +200,45 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── Testimonials ─────────────────────────────────── */}
+      <section className="space-y-6">
+        <div className="flex flex-col items-center text-center max-w-2xl mx-auto mb-4">
+          <Badge variant="secondary" className="mb-3 px-3 py-1 bg-primary/10 text-primary hover:bg-primary/20 transition-colors">
+            Voices of Trust
+          </Badge>
+          <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Trusted by Pharma Professionals Worldwide</h2>
+          <p className="text-muted-foreground mt-2 text-sm md:text-base">
+            See how our ready-to-use SOPs and templates are helping quality and regulatory teams maintain compliance without the headache.
+          </p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {[
+            { quote: "The QA SOP templates saved us months of drafting work. The formatting is spot on and completely aligned with FDA 21 CFR.", name: "Dr. Alistair M.", role: "QA Director, Pharma Manufacturer" },
+            { quote: "We used their Process Validation documents for our recent facility upgrade. Passed the GMP audit flawlessly. Highly recommended!", name: "Sarah K.", role: "Validation Engineer, Biotech Firm" },
+            { quote: "Affordable, comprehensive, and very easy to customize. The Microbiology lab manuals are exactly what our startup needed.", name: "James T.", role: "QC Manager, Clinical Lab" },
+          ].map((test, index) => (
+            <div key={index} className="bg-card border rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow relative">
+              <Quote className="h-8 w-8 text-primary/10 absolute top-4 right-4" />
+              <div className="flex gap-1 mb-4">
+                {[...Array(5)].map((_, i) => <Star key={i} className="h-4 w-4 fill-primary text-primary" />)}
+              </div>
+              <p className="text-sm italic text-muted-foreground leading-relaxed mb-6">"{test.quote}"</p>
+              <div>
+                <p className="font-semibold text-sm">{test.name}</p>
+                <p className="text-xs text-muted-foreground">{test.role}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* ── Recent Insights ─────────────────────────────── */}
       {insights.length > 0 && (
         <section className="space-y-6">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold tracking-tight">Recent Insights</h2>
             <Button variant="ghost" className="text-primary hover:text-primary/90" asChild>
-              <Link href="#">View all</Link>
+              <Link href="/insights">View all</Link>
             </Button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

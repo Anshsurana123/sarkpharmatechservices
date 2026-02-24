@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { supabase } from '@/utils/supabase/client';
 
 // Extend the Window interface to include Razorpay
 declare global {
@@ -59,7 +60,7 @@ export const useRazorpay = () => {
                 name: 'Sark Pharma Tech Services',
                 description: description,
                 order_id: data.orderId,
-                handler: function (response: any) {
+                handler: async function (response: any) {
                     // Save purchase to localStorage for profile page
                     try {
                         const existing = JSON.parse(localStorage.getItem('pharma_purchases') || '[]');
@@ -81,7 +82,18 @@ export const useRazorpay = () => {
                             time: new Date().toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }),
                         });
                         localStorage.setItem('pharma_notifications', JSON.stringify(notifs.slice(0, 20)));
-                    } catch (_) { }
+
+                        // Record to Supabase (if logged in)
+                        const { data: { session } } = await supabase.auth.getSession();
+                        await supabase.from('transactions').insert([{
+                            user_id: session?.user?.id || null, // Will be null for guests
+                            amount: amount,
+                            currency: currency,
+                            item_name: description,
+                            payment_id: response.razorpay_payment_id
+                        }]);
+                    } catch (e) { console.error('Error logging transaction', e) }
+                    window.dispatchEvent(new Event('pharma_purchase_complete'));
                     alert(`✅ Payment successful! Payment ID: ${response.razorpay_payment_id}`);
                 },
                 prefill: {
