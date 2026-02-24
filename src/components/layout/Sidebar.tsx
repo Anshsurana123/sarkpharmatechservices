@@ -13,7 +13,7 @@ import {
     SidebarMenuItem,
     SidebarFooter,
 } from '@/components/ui/sidebar';
-import { FileText, FlaskConical, ShieldCheck, Stethoscope, Settings, Beaker, BriefcaseMedical, Cross, Microscope, BookOpen, Info } from 'lucide-react';
+import { FileText, FlaskConical, ShieldCheck, Stethoscope, Settings, Beaker, BriefcaseMedical, Cross, Microscope, BookOpen, Info, User } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { usePharmaStore } from '@/data/store';
@@ -104,7 +104,14 @@ export function AppSidebar() {
                 )}
             </SidebarContent>
 
-            <SidebarFooter className="border-t border-border/50 px-3 py-3">
+            <SidebarFooter className="border-t border-border/50 px-3 py-3 space-y-1">
+                <Link
+                    href="/profile"
+                    className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all hover:bg-primary/10 ${pathname === '/profile' ? 'bg-primary/15 text-primary font-semibold' : 'text-muted-foreground hover:text-foreground'}`}
+                >
+                    <User className="h-4 w-4 shrink-0" />
+                    <span>My Profile</span>
+                </Link>
                 <Link
                     href="/about"
                     className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all hover:bg-primary/10 ${pathname === '/about' ? 'bg-primary/15 text-primary font-semibold' : 'text-muted-foreground hover:text-foreground'}`}

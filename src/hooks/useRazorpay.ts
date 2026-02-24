@@ -14,17 +14,19 @@ export const useRazorpay = () => {
         return new Promise((resolve) => {
             const script = document.createElement('script');
             script.src = 'https://checkout.razorpay.com/v1/checkout.js';
-            script.onload = () => {
-                resolve(true);
-            };
-            script.onerror = () => {
-                resolve(false);
-            };
+            script.onload = () => { resolve(true); };
+            script.onerror = () => { resolve(false); };
             document.body.appendChild(script);
         });
     };
 
-    const processPayment = async (amount: number, currency: string = 'INR', description: string = 'SOP License') => {
+    const processPayment = async (
+        amount: number,
+        currency: string = 'INR',
+        description: string = 'SOP License',
+        sopId?: string,
+        sopTitle?: string
+    ) => {
         setIsProcessing(true);
 
         const isLoaded = await loadRazorpayScript();
@@ -36,9 +38,6 @@ export const useRazorpay = () => {
         }
 
         try {
-            // 1. Create the order on the backend
-            // Note: Amount passed to backend is for server verification logic, 
-            // but for Razorpay API it needs to be in subunits (Paise for INR, 1 INR = 100 Paise)
             const amountInSubunits = amount * 100;
 
             const response = await fetch('/api/create-order', {
@@ -53,19 +52,28 @@ export const useRazorpay = () => {
                 throw new Error(data.error || 'Failed to create order');
             }
 
-            // 2. Open Razorpay Checkot
             const options = {
-                key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || '', // We need to expose this to the client
+                key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || '',
                 amount: amountInSubunits.toString(),
                 currency: currency,
                 name: 'Sark Pharma Tech Services',
                 description: description,
                 order_id: data.orderId,
                 handler: function (response: any) {
-                    // Success! 
-                    // To be fully secure, you would pass response.razorpay_signature back to your server to verify
-                    alert(`Payment successful! Payment ID: ${response.razorpay_payment_id}`);
-                    console.log("Success Response:", response);
+                    // Save purchase to localStorage for profile page
+                    try {
+                        const existing = JSON.parse(localStorage.getItem('pharma_purchases') || '[]');
+                        const purchase = {
+                            id: sopId || data.orderId,
+                            title: sopTitle || description,
+                            amount,
+                            currency,
+                            paymentId: response.razorpay_payment_id,
+                            date: new Date().toISOString().split('T')[0],
+                        };
+                        localStorage.setItem('pharma_purchases', JSON.stringify([purchase, ...existing]));
+                    } catch (_) { }
+                    alert(`✅ Payment successful! Payment ID: ${response.razorpay_payment_id}`);
                 },
                 prefill: {
                     name: 'Guest User',

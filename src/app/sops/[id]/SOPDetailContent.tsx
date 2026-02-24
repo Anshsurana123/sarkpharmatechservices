@@ -1,6 +1,6 @@
 'use client';
 
-import { use } from 'react';
+import { use, useEffect } from 'react';
 import { usePharmaStore } from '@/data/store';
 import { notFound } from 'next/navigation';
 import { Badge } from '@/components/ui/badge';
@@ -26,6 +26,18 @@ export function SOPDetailContent({ params }: { params: Promise<{ id: string }> }
     if (!sop) {
         notFound();
     }
+
+    // Track recently viewed
+    useEffect(() => {
+        if (!sop) return;
+        try {
+            const existing: { id: string; title: string; department: string; date: string; viewedAt: string }[] =
+                JSON.parse(localStorage.getItem('pharma_recently_viewed') || '[]');
+            const filtered = existing.filter(s => s.id !== sop.id);
+            const updated = [{ id: sop.id, title: sop.title, department: sop.department, date: sop.date, viewedAt: new Date().toISOString() }, ...filtered].slice(0, 10);
+            localStorage.setItem('pharma_recently_viewed', JSON.stringify(updated));
+        } catch (_) { }
+    }, [sop?.id]);
 
     return (
         <div className="space-y-6 max-w-5xl mx-auto">
