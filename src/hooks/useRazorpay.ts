@@ -72,6 +72,15 @@ export const useRazorpay = () => {
                             date: new Date().toISOString().split('T')[0],
                         };
                         localStorage.setItem('pharma_purchases', JSON.stringify([purchase, ...existing]));
+
+                        // Push a bell notification
+                        const notifs = JSON.parse(localStorage.getItem('pharma_notifications') || '[]');
+                        notifs.unshift({
+                            id: response.razorpay_payment_id,
+                            text: `Purchase confirmed: ${sopTitle || description}`,
+                            time: new Date().toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }),
+                        });
+                        localStorage.setItem('pharma_notifications', JSON.stringify(notifs.slice(0, 20)));
                     } catch (_) { }
                     alert(`✅ Payment successful! Payment ID: ${response.razorpay_payment_id}`);
                 },
