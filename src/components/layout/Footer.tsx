@@ -62,8 +62,8 @@ export function Footer() {
                 <div className="mt-8 pt-6 border-t flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-muted-foreground">
                     <p>© {year} Sark Pharma Tech Services. All rights reserved.</p>
                     <div className="flex gap-4">
-                        <Link href="/about" className="hover:text-primary transition-colors">Privacy Policy</Link>
-                        <Link href="/about" className="hover:text-primary transition-colors">Terms of Use</Link>
+                        <Link href="/privacy" className="hover:text-primary transition-colors">Privacy Policy</Link>
+                        <Link href="/terms" className="hover:text-primary transition-colors">Terms of Use</Link>
                     </div>
                 </div>
             </div>

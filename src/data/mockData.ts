@@ -3,6 +3,7 @@ export type SOP = {
   title: string;
   department: string;
   documentType: string;
+  status?: string;
   date: string;
   author: string;
   content?: string;

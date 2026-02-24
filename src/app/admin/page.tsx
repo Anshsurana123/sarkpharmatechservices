@@ -107,21 +107,22 @@ export default function AdminPage() {
             title: sopTitle,
             department: sopDept,
             documentType: sopType,
+            status: 'Approved',
             date: new Date().toISOString().split('T')[0],
             author: 'Admin User',
             content: sopContent,
             file_url: file_url
         });
 
-        // Reset form
         setSopTitle('');
         setSopDept('');
         setSopType('');
         setSopContent('');
         setSopFile(null);
         setIsUploading(false);
-        (document.getElementById('file-upload') as HTMLInputElement).value = '';
-        alert('SOP Added Successfully!');
+        const el = document.getElementById('file-upload') as HTMLInputElement;
+        if (el) el.value = '';
+        alert('✅ SOP Added Successfully and saved to database!');
     };
 
     const handleAddDepartment = (e: React.FormEvent) => {

@@ -33,7 +33,7 @@ export function CookieBanner() {
                     <Cookie className="h-5 w-5 shrink-0 text-primary mt-0.5" />
                     <p className="text-sm text-muted-foreground leading-relaxed">
                         We use cookies to improve your experience and analyse usage. By continuing, you agree to our{' '}
-                        <a href="/about" className="underline text-foreground hover:text-primary transition-colors">Privacy Policy</a>.
+                        <a href="/privacy" className="underline text-foreground hover:text-primary transition-colors">Privacy Policy</a>.
                     </p>
                 </div>
                 <div className="flex gap-2 shrink-0">
