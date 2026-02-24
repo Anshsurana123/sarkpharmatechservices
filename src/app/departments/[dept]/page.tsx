@@ -64,7 +64,6 @@ export default function DepartmentPage({ params }: { params: Promise<{ dept: str
                                 <TableHead className="w-[120px]">Doc ID</TableHead>
                                 <TableHead>Title</TableHead>
                                 <TableHead>Type</TableHead>
-                                <TableHead>Status</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -93,18 +92,6 @@ export default function DepartmentPage({ params }: { params: Promise<{ dept: str
                                         <TableCell>
                                             <Badge variant="outline" className="bg-background">
                                                 {sop.documentType}
-                                            </Badge>
-                                        </TableCell>
-                                        <TableCell>
-                                            <Badge
-                                                variant="secondary"
-                                                className={
-                                                    sop.status === 'Approved' ? 'bg-secondary/10 text-secondary hover:bg-secondary/20' :
-                                                        sop.status === 'Draft' ? 'bg-muted text-muted-foreground hover:bg-muted/80' :
-                                                            'bg-primary/10 text-primary hover:bg-primary/20'
-                                                }
-                                            >
-                                                {sop.status}
                                             </Badge>
                                         </TableCell>
                                     </TableRow>

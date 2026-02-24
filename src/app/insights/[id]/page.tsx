@@ -65,7 +65,7 @@ export default function InsightDetailPage() {
             {/* Header */}
             <div className="space-y-4">
                 <div className="flex items-center gap-3 flex-wrap">
-                    <Badge variant="secondary" className="bg-secondary/10 text-secondary">
+                    <Badge variant="secondary" className="bg-secondary/10 text-secondary dark:bg-primary/10 dark:text-primary">
                         {insight.category}
                     </Badge>
                     <span className="flex items-center text-sm text-muted-foreground gap-1">

@@ -3,7 +3,6 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { usePharmaStore } from '@/data/store';
-import { useRazorpay } from '@/hooks/useRazorpay';
 import {
     Table,
     TableBody,
@@ -14,13 +13,12 @@ import {
 } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { FileText, Search, ShoppingCart } from 'lucide-react';
+import { FileText, Search, BookOpen } from 'lucide-react';
+import Link from 'next/link';
 
 const DOC_TYPES = ['Manual', 'Protocol', 'Checklist'];
 
-function SOPDashboardContent() {
-    const { processPayment, isProcessing } = useRazorpay();
+function LibraryContent() {
     const searchParams = useSearchParams();
     const sops = usePharmaStore(state => state.sops);
     const departments = usePharmaStore(state => state.departments);
@@ -31,25 +29,18 @@ function SOPDashboardContent() {
     useEffect(() => {
         const deptParam = searchParams.get('dept');
         if (deptParam) {
-            // Map the URL shorthand to the full department name
             const deptMapping: Record<string, string> = {
                 qa: 'Quality Assurance',
                 qc: 'Quality Control',
                 micro: 'Microbiology'
             };
             const fullDeptName = deptMapping[deptParam];
-            if (fullDeptName) {
-                setSelectedDepts([fullDeptName]);
-            }
+            if (fullDeptName) setSelectedDepts([fullDeptName]);
         }
     }, [searchParams]);
 
     const toggleFilter = (list: string[], setList: (v: string[]) => void, item: string) => {
-        if (list.includes(item)) {
-            setList(list.filter(i => i !== item));
-        } else {
-            setList([...list, item]);
-        }
+        setList(list.includes(item) ? list.filter(i => i !== item) : [...list, item]);
     };
 
     const filteredSops = sops.filter(sop => {
@@ -63,14 +54,9 @@ function SOPDashboardContent() {
         <div className="space-y-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight">MS Word Editable SOP Database</h1>
-                    <p className="text-muted-foreground">Search, filter, and access all controlled documents.</p>
+                    <h1 className="text-3xl font-bold tracking-tight">SOP Library</h1>
+                    <p className="text-muted-foreground">Browse and read SOP content directly — no purchase required.</p>
                 </div>
-                <Button className="bg-primary text-primary-foreground hover:bg-primary/90" asChild>
-                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSdP0PdUGnuxn3iOigqZ1f02eu1Bkqn7YAFGtqnbnbqwB0D8fg/viewform?usp=publish-editor" target="_blank" rel="noopener noreferrer">
-                        Request Document
-                    </a>
-                </Button>
             </div>
 
             <div className="flex flex-col lg:flex-row gap-6">
@@ -89,9 +75,7 @@ function SOPDashboardContent() {
                                         >
                                             {selectedDepts.includes(dept) && <span className="text-[10px]">✓</span>}
                                         </button>
-                                        <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                                            {dept}
-                                        </label>
+                                        <label className="text-sm font-medium leading-none">{dept}</label>
                                     </div>
                                 );
                             })}
@@ -103,27 +87,25 @@ function SOPDashboardContent() {
                                 <div key={type} className="flex items-center space-x-2">
                                     <button
                                         onClick={() => toggleFilter(selectedTypes, setSelectedTypes, type)}
-                                        className={`h-4 w-4 rounded border flex items-center justify-center transition-colors ${selectedTypes.includes(type) ? 'bg-secondary border-secondary text-secondary-foreground' : 'border-input bg-transparent'}`}
+                                        className={`h-4 w-4 rounded border flex items-center justify-center transition-colors ${selectedTypes.includes(type) ? 'bg-primary border-primary text-primary-foreground' : 'border-input bg-transparent'}`}
                                     >
                                         {selectedTypes.includes(type) && <span className="text-[10px]">✓</span>}
                                     </button>
-                                    <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                                        {type}
-                                    </label>
+                                    <label className="text-sm font-medium leading-none">{type}</label>
                                 </div>
                             ))}
                         </div>
                     </div>
                 </div>
 
-                {/* Data Table Area */}
+                {/* Table */}
                 <div className="flex-1 bg-card border rounded-xl shadow-sm overflow-hidden flex flex-col">
                     <div className="p-4 border-b flex items-center gap-4 bg-muted/10">
                         <div className="relative flex-1">
                             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                             <Input
                                 type="search"
-                                placeholder="Search by ID or Title..."
+                                placeholder="Search by ID or title..."
                                 className="pl-8 bg-background"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -141,7 +123,7 @@ function SOPDashboardContent() {
                                     <TableHead className="w-[120px]">Doc ID</TableHead>
                                     <TableHead>Title</TableHead>
                                     <TableHead>Department</TableHead>
-                                    <TableHead className="text-right">Actions</TableHead>
+                                    <TableHead>Type</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -153,7 +135,7 @@ function SOPDashboardContent() {
                                     </TableRow>
                                 ) : (
                                     filteredSops.map((sop) => (
-                                        <TableRow key={sop.id} className="hover:bg-muted/10">
+                                        <TableRow key={sop.id} className="hover:bg-muted/10 cursor-pointer group">
                                             <TableCell className="font-medium text-primary">
                                                 <div className="flex items-center gap-2">
                                                     <FileText className="h-4 w-4 text-muted-foreground" />
@@ -161,24 +143,23 @@ function SOPDashboardContent() {
                                                 </div>
                                             </TableCell>
                                             <TableCell>
-                                                <span className="font-semibold text-foreground/90">{sop.title}</span>
-                                                <div className="text-xs text-muted-foreground mt-1">Updated {sop.date} • {sop.author}</div>
+                                                <Link href={`/library/${sop.id}`} className="group/link flex items-center gap-2">
+                                                    <span className="font-semibold text-foreground/90 group-hover/link:text-primary transition-colors flex items-center gap-1.5">
+                                                        {sop.title}
+                                                        <BookOpen className="h-3.5 w-3.5 text-muted-foreground opacity-0 group-hover/link:opacity-100 transition-opacity" />
+                                                    </span>
+                                                    <div className="text-xs text-muted-foreground mt-0.5">Updated {sop.date} • {sop.author}</div>
+                                                </Link>
                                             </TableCell>
                                             <TableCell>
                                                 <Badge variant="outline" className="bg-background">
                                                     {sop.department}
                                                 </Badge>
                                             </TableCell>
-                                            <TableCell className="text-right">
-                                                <Button
-                                                    variant="default"
-                                                    size="sm"
-                                                    className="bg-primary hover:bg-primary/90"
-                                                    onClick={() => processPayment(499, 'INR', `License for ${sop.title}`)}
-                                                    disabled={isProcessing}
-                                                >
-                                                    <ShoppingCart className="h-4 w-4 mr-2" /> {isProcessing ? 'Processing' : 'Buy'}
-                                                </Button>
+                                            <TableCell>
+                                                <Badge variant="outline" className="bg-background">
+                                                    {sop.documentType}
+                                                </Badge>
                                             </TableCell>
                                         </TableRow>
                                     ))
@@ -192,10 +173,10 @@ function SOPDashboardContent() {
     );
 }
 
-export default function SOPDashboard() {
+export default function LibraryPage() {
     return (
-        <Suspense fallback={<div className="p-8 text-center text-muted-foreground">Loading dashboard...</div>}>
-            <SOPDashboardContent />
+        <Suspense fallback={<div className="p-8 text-center text-muted-foreground">Loading library...</div>}>
+            <LibraryContent />
         </Suspense>
     );
 }

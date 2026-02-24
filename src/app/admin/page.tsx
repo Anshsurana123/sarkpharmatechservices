@@ -31,7 +31,6 @@ export default function AdminPage() {
     const [sopTitle, setSopTitle] = useState('');
     const [sopDept, setSopDept] = useState('');
     const [sopType, setSopType] = useState('');
-    const [sopStatus, setSopStatus] = useState('Draft');
     const [sopContent, setSopContent] = useState('');
     const [sopFile, setSopFile] = useState<File | null>(null);
     const [isUploading, setIsUploading] = useState(false);
@@ -108,7 +107,6 @@ export default function AdminPage() {
             title: sopTitle,
             department: sopDept,
             documentType: sopType,
-            status: sopStatus as 'Draft' | 'Approved' | 'Under Review',
             date: new Date().toISOString().split('T')[0],
             author: 'Admin User',
             content: sopContent,

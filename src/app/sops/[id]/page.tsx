@@ -32,16 +32,6 @@ export default function SOPDetailPage({ params }: { params: Promise<{ id: string
                 <div>
                     <div className="flex items-center gap-2 mb-2">
                         <Badge variant="outline" className="bg-background">{sop.documentType}</Badge>
-                        <Badge
-                            variant="secondary"
-                            className={
-                                sop.status === 'Approved' ? 'bg-secondary/10 text-secondary' :
-                                    sop.status === 'Draft' ? 'bg-muted text-muted-foreground' :
-                                        'bg-primary/10 text-primary'
-                            }
-                        >
-                            {sop.status}
-                        </Badge>
                     </div>
                     <h1 className="text-3xl font-bold tracking-tight">{sop.title}</h1>
                     <p className="text-muted-foreground mt-1 text-sm flex items-center gap-4">

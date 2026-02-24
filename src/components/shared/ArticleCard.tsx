@@ -19,7 +19,7 @@ export function ArticleCard({ id, title, excerpt, date, category, readTime }: Ar
             <Card className="hover:shadow-md hover:border-primary/40 transition-all flex flex-col h-full cursor-pointer">
                 <CardHeader className="pb-3">
                     <div className="flex items-center justify-between mb-2">
-                        <Badge variant="secondary" className="bg-secondary/10 text-secondary hover:bg-secondary/20">
+                        <Badge variant="secondary" className="bg-secondary/10 text-secondary dark:bg-primary/10 dark:text-primary hover:bg-secondary/20 dark:hover:bg-primary/20">
                             {category}
                         </Badge>
                         <div className="flex items-center text-xs text-muted-foreground">

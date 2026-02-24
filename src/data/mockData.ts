@@ -4,7 +4,6 @@ export type SOP = {
   department: string;
   documentType: string;
   date: string;
-  status: 'Draft' | 'Approved' | 'Under Review';
   author: string;
   content?: string;
   file_url?: string;
@@ -35,7 +34,6 @@ export const sops: SOP[] = [
     department: 'Quality Assurance',
     documentType: 'Manual',
     date: '2026-01-15',
-    status: 'Approved',
     author: 'Sarah Jenkins',
   },
   {
@@ -44,7 +42,6 @@ export const sops: SOP[] = [
     department: 'Quality Control',
     documentType: 'Protocol',
     date: '2026-02-10',
-    status: 'Approved',
     author: 'Dr. Alan Grant',
   },
   {
@@ -53,7 +50,6 @@ export const sops: SOP[] = [
     department: 'Microbiology',
     documentType: 'Checklist',
     date: '2026-02-18',
-    status: 'Under Review',
     author: 'Elena Rostova',
   },
   {
@@ -62,7 +58,6 @@ export const sops: SOP[] = [
     department: 'Production',
     documentType: 'Protocol',
     date: '2025-11-20',
-    status: 'Approved',
     author: 'Marcus Thorne',
   },
   {
@@ -71,7 +66,6 @@ export const sops: SOP[] = [
     department: 'Regulatory Affairs',
     documentType: 'Manual',
     date: '2026-02-22',
-    status: 'Draft',
     author: 'Priya Patel',
   },
 ];
