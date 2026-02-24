@@ -6,8 +6,9 @@ import { supabase } from '@/utils/supabase/client';
 import type { Insight } from '@/data/store';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Clock, Download, FileText, Loader2 } from 'lucide-react';
+import { ArrowLeft, Clock, Download, FileText, Loader2, Linkedin } from 'lucide-react';
 import Link from 'next/link';
+import { Breadcrumbs } from '@/components/shared/Breadcrumbs';
 
 export default function InsightDetailPage() {
     const { id } = useParams<{ id: string }>();
@@ -55,24 +56,43 @@ export default function InsightDetailPage() {
         );
     }
 
+    const linkedInShareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(typeof window !== 'undefined' ? window.location.href : '')}`;
+
     return (
         <div className="max-w-4xl mx-auto space-y-8 pb-12">
-            {/* Back navigation */}
-            <Button variant="ghost" size="sm" onClick={() => router.back()} className="gap-2 -ml-2">
-                <ArrowLeft className="h-4 w-4" /> Back
-            </Button>
+            {/* Breadcrumbs + back nav */}
+            <div className="flex items-center justify-between gap-4">
+                <Breadcrumbs crumbs={[
+                    { label: 'Insights', href: '/' },
+                    { label: insight.title },
+                ]} />
+                <Button variant="ghost" size="sm" onClick={() => router.back()} className="gap-2 shrink-0">
+                    <ArrowLeft className="h-4 w-4" /> Back
+                </Button>
+            </div>
 
             {/* Header */}
             <div className="space-y-4">
-                <div className="flex items-center gap-3 flex-wrap">
-                    <Badge variant="secondary" className="bg-secondary/10 text-secondary dark:bg-primary/10 dark:text-primary">
-                        {insight.category}
-                    </Badge>
-                    <span className="flex items-center text-sm text-muted-foreground gap-1">
-                        <Clock className="h-4 w-4" />
-                        {insight.read_time}
-                    </span>
-                    <span className="text-sm text-muted-foreground">{insight.date}</span>
+                <div className="flex items-center justify-between flex-wrap gap-3">
+                    <div className="flex items-center gap-3 flex-wrap">
+                        <Badge variant="secondary" className="bg-secondary/10 text-secondary dark:bg-primary/10 dark:text-primary">
+                            {insight.category}
+                        </Badge>
+                        <span className="flex items-center text-sm text-muted-foreground gap-1">
+                            <Clock className="h-4 w-4" />
+                            {insight.read_time}
+                        </span>
+                        <span className="text-sm text-muted-foreground">{insight.date}</span>
+                    </div>
+                    {/* LinkedIn share */}
+                    <a
+                        href={linkedInShareUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#0077B5]/10 text-[#0077B5] dark:bg-[#0077B5]/20 hover:bg-[#0077B5]/20 dark:hover:bg-[#0077B5]/30 transition-colors text-sm font-medium"
+                    >
+                        <Linkedin className="h-4 w-4" /> Share on LinkedIn
+                    </a>
                 </div>
                 <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight leading-tight">
                     {insight.title}

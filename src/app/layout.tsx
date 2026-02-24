@@ -5,6 +5,9 @@ import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/layout/Sidebar";
 import { Topbar } from "@/components/layout/Topbar";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { Footer } from "@/components/layout/Footer";
+import { CookieBanner } from "@/components/shared/CookieBanner";
+import { Analytics } from "@vercel/analytics/react";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
@@ -26,8 +29,11 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
               <main className="flex-1 overflow-y-auto overflow-x-hidden bg-muted/20 p-4 md:p-6 w-full max-w-full">
                 {children}
               </main>
+              <Footer />
             </SidebarInset>
           </SidebarProvider>
+          <CookieBanner />
+          <Analytics />
         </ThemeProvider>
       </body>
     </html>

@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { FileText, Calendar, User, Building2, ArrowLeft, BookOpen } from 'lucide-react';
 import Link from 'next/link';
+import { Breadcrumbs } from '@/components/shared/Breadcrumbs';
 
 export default function LibraryDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const resolvedParams = use(params);
@@ -23,6 +24,10 @@ export default function LibraryDetailPage({ params }: { params: Promise<{ id: st
 
     return (
         <div className="space-y-6 max-w-4xl mx-auto pb-12">
+            <Breadcrumbs crumbs={[
+                { label: 'SOP Library', href: '/library' },
+                { label: sop.title },
+            ]} />
             {/* Back nav */}
             <Button variant="ghost" size="sm" asChild className="-ml-2 gap-2">
                 <Link href="/library">

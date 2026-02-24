@@ -3,6 +3,7 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { usePharmaStore } from '@/data/store';
+import { SOPTableSkeleton } from '@/components/shared/Skeletons';
 import {
     Table,
     TableBody,
@@ -175,7 +176,7 @@ function LibraryContent() {
 
 export default function LibraryPage() {
     return (
-        <Suspense fallback={<div className="p-8 text-center text-muted-foreground">Loading library...</div>}>
+        <Suspense fallback={<SOPTableSkeleton />}>
             <LibraryContent />
         </Suspense>
     );

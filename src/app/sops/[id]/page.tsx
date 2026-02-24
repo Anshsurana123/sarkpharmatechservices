@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { FileText, Calendar, User, Building2, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
 import { useRazorpay } from '@/hooks/useRazorpay';
+import { Breadcrumbs } from '@/components/shared/Breadcrumbs';
 
 export default function SOPDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const resolvedParams = use(params);
@@ -28,6 +29,10 @@ export default function SOPDetailPage({ params }: { params: Promise<{ id: string
 
     return (
         <div className="space-y-6 max-w-5xl mx-auto">
+            <Breadcrumbs crumbs={[
+                { label: 'SOP Database', href: '/sops' },
+                { label: sop.title },
+            ]} />
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
                     <div className="flex items-center gap-2 mb-2">

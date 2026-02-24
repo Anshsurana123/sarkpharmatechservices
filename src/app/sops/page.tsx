@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { usePharmaStore } from '@/data/store';
 import { useRazorpay } from '@/hooks/useRazorpay';
+import { SOPTableSkeleton } from '@/components/shared/Skeletons';
 import {
     Table,
     TableBody,
@@ -194,7 +195,7 @@ function SOPDashboardContent() {
 
 export default function SOPDashboard() {
     return (
-        <Suspense fallback={<div className="p-8 text-center text-muted-foreground">Loading dashboard...</div>}>
+        <Suspense fallback={<SOPTableSkeleton />}>
             <SOPDashboardContent />
         </Suspense>
     );
