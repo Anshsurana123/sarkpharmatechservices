@@ -8,6 +8,7 @@ export type SOP = {
   author: string;
   content?: string;
   file_url?: string;
+  price?: number;
 };
 
 export type Article = {

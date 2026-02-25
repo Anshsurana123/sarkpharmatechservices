@@ -175,10 +175,10 @@ function SOPDashboardContent() {
                                                     variant="default"
                                                     size="sm"
                                                     className="bg-primary hover:bg-primary/90"
-                                                    onClick={() => processPayment(499, 'INR', `License for ${sop.title}`)}
+                                                    onClick={() => processPayment(sop.price || 499, 'INR', `License for ${sop.title}`)}
                                                     disabled={isProcessing}
                                                 >
-                                                    <ShoppingCart className="h-4 w-4 mr-2" /> {isProcessing ? 'Processing' : 'Buy'}
+                                                    <ShoppingCart className="h-4 w-4 mr-2" /> {isProcessing ? 'Processing' : `Buy - ₹${sop.price || 499}`}
                                                 </Button>
                                             </TableCell>
                                         </TableRow>

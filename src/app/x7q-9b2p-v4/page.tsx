@@ -41,6 +41,7 @@ export default function AdminPage() {
     const [sopDept, setSopDept] = useState('');
     const [sopType, setSopType] = useState('');
     const [sopContent, setSopContent] = useState('');
+    const [sopPrice, setSopPrice] = useState('');
     const [sopFile, setSopFile] = useState<File | null>(null);
     const [isUploading, setIsUploading] = useState(false);
 
@@ -173,13 +174,15 @@ export default function AdminPage() {
             date: new Date().toISOString().split('T')[0],
             author: 'Admin User',
             content: sopContent,
-            file_url: file_url
+            file_url: file_url,
+            price: sopPrice ? Number(sopPrice) : undefined
         });
 
         setSopTitle('');
         setSopDept('');
         setSopType('');
         setSopContent('');
+        setSopPrice('');
         setSopFile(null);
         setIsUploading(false);
         const el = document.getElementById('file-upload') as HTMLInputElement;
@@ -429,6 +432,16 @@ export default function AdminPage() {
                                         value={sopTitle}
                                         onChange={(e) => setSopTitle(e.target.value)}
                                         required
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="sopPrice">Price (INR) - If Paid</Label>
+                                    <Input
+                                        id="sopPrice"
+                                        type="number"
+                                        placeholder="e.g., 999 (Leave blank for Free/Available)"
+                                        value={sopPrice}
+                                        onChange={(e) => setSopPrice(e.target.value)}
                                     />
                                 </div>
                                 <div className="grid grid-cols-2 gap-4">
