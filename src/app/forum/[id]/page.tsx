@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -28,7 +28,9 @@ type ForumComment = {
     created_at: string;
 };
 
-export default function ForumPostPage({ params }: { params: { id: string } }) {
+export default function ForumPostPage({ params }: { params: Promise<{ id: string }> }) {
+    const resolvedParams = use(params);
+    const postId = resolvedParams.id;
     const [post, setPost] = useState<ForumPost | null>(null);
     const [comments, setComments] = useState<ForumComment[]>([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -42,7 +44,7 @@ export default function ForumPostPage({ params }: { params: { id: string } }) {
     useEffect(() => {
         fetchPostData();
         checkAuth();
-    }, [params.id]);
+    }, [postId]);
 
     const checkAuth = async () => {
         const { data: { session } } = await supabase.auth.getSession();
@@ -62,7 +64,7 @@ export default function ForumPostPage({ params }: { params: { id: string } }) {
             const { data: postData, error: postError } = await supabase
                 .from('forum_posts')
                 .select('*')
-                .eq('id', params.id)
+                .eq('id', postId)
                 .single();
 
             if (postError) throw postError;
@@ -72,7 +74,7 @@ export default function ForumPostPage({ params }: { params: { id: string } }) {
             const { data: commentsData, error: commentsError } = await supabase
                 .from('forum_comments')
                 .select('*')
-                .eq('post_id', params.id)
+                .eq('post_id', postId)
                 .order('created_at', { ascending: true });
 
             if (commentsError) throw commentsError;

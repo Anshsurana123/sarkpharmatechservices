@@ -6,7 +6,7 @@ import { ShieldCheck, BookOpen, FileText, Lightbulb, Mail, Globe, Send, Phone, M
 
 export default function AboutPage() {
     return (
-        <div className="max-w-4xl mx-auto pb-12 space-y-12">
+        <div className="max-w-4xl mx-auto pt-6 pb-12 space-y-12">
 
             {/* Hero */}
             <section className="relative rounded-3xl overflow-hidden p-10 md:p-16 text-center shadow-xl">
@@ -185,9 +185,9 @@ export default function AboutPage() {
 
                     {/* Contact details */}
                     <div className="space-y-4 flex flex-col justify-center">
-                        <div>
+                        <div id="contact">
                             <p className="font-semibold text-sm mb-1">Email Us</p>
-                            <a href="mailto:contact@sarkpharmatech.com" className="flex items-center gap-2 text-primary hover:underline text-sm">
+                            <a href="#contact" className="flex items-center gap-2 text-primary hover:underline text-sm">
                                 <Mail className="h-4 w-4" /> contact@sarkpharmatech.com
                             </a>
                         </div>

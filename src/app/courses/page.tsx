@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { GraduationCap, BookOpen, Clock, CheckCircle2, ShoppingCart, DownloadCloud, PlayCircle, File as FileIcon } from "lucide-react";
+import Link from "next/link";
 import { usePharmaStore, Course } from '@/data/store';
 import { useRazorpay } from '@/hooks/useRazorpay';
 
@@ -168,9 +169,9 @@ export default function CoursesPage() {
                         Need offline workshops or bespoke training for your entire quality team? Our experts travel globally to conduct in-house compliance and audit-readiness seminars.
                     </p>
                     <Button variant="outline" asChild>
-                        <a href="mailto:contact@sarkpharmatech.com?subject=Corporate Training Enquiry">
-                            Enquire About Corporate Training
-                        </a>
+                        <Link href="/about#contact">
+                            Contact for Enterprise Pricing
+                        </Link>
                     </Button>
                 </div>
             </section>

@@ -39,7 +39,7 @@ export default function TermsOfUsePage() {
                         <li>For SOPs, you may customise and adapt the document for your facility.</li>
                         <li>For Courses, the materials are for the individual or internal team that purchased it.</li>
                         <li>You may <strong>not</strong> resell, redistribute, sublicence, or publicly share the documents or course materials in their original or modified form.</li>
-                        <li>One purchase covers one site or individual user instance. Multi-site or enterprise training use requires bulk licensing — contact us at <a href="mailto:contact@sarkpharmatech.com">contact@sarkpharmatech.com</a>.</li>
+                        <li>One purchase covers one site or individual user instance. Multi-site or enterprise training use requires bulk licensing — <a href="/about#contact" className="text-primary underline">contact us</a>.</li>
                     </ul>
                 </section>
 
@@ -80,7 +80,7 @@ export default function TermsOfUsePage() {
 
                 <section>
                     <h2>9. Contact</h2>
-                    <p>For questions about these Terms, contact us at <a href="mailto:contact@sarkpharmatech.com">contact@sarkpharmatech.com</a>.</p>
+                    <p>For questions about these Terms, <a href="/about#contact" className="text-primary underline">contact us</a>.</p>
                 </section>
             </div>
         </div>

@@ -15,7 +15,7 @@ export default function BundlesPage() {
     };
 
     return (
-        <div className="max-w-6xl mx-auto pb-16 space-y-12">
+        <div className="max-w-6xl mx-auto pt-6 pb-16 space-y-12">
             {/* Hero */}
             <section className="relative rounded-3xl overflow-hidden p-10 md:p-14 text-center shadow-xl">
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/95 via-primary to-secondary/90 z-0" />
@@ -172,9 +172,9 @@ export default function BundlesPage() {
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 w-full justify-center">
                     <Button variant="default" size="lg" asChild>
-                        <a href="mailto:contact@sarkpharmatech.com?subject=Custom Document Bundle Enquiry">
+                        <Link href="/about#contact">
                             Contact for Custom Pricing
-                        </a>
+                        </Link>
                     </Button>
                     <Button variant="outline" size="lg" asChild>
                         <Link href="/sops" className="flex items-center gap-2">

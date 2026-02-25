@@ -37,7 +37,7 @@ export default function RefundPolicyPage() {
                         <li><strong>Duplicate charge:</strong> If your payment was processed more than once for the same order</li>
                         <li><strong>Significantly misdescribed product:</strong> If the document or course is materially different from its published description</li>
                     </ul>
-                    <p>To request a review, email <a href="mailto:contact@sarkpharmatech.com" className="text-primary underline">contact@sarkpharmatech.com</a> within <strong>48 hours</strong> of purchase with your payment reference ID.</p>
+                    <p>To request a review, <a href="/about#contact" className="text-primary underline">contact us</a> within <strong>48 hours</strong> of purchase with your payment reference ID.</p>
                 </section>
 
                 <section>
@@ -54,7 +54,7 @@ export default function RefundPolicyPage() {
                     <h2>Contact Us</h2>
                     <p>For any payment or refund queries, contact us at:</p>
                     <ul>
-                        <li>Email: <a href="mailto:contact@sarkpharmatech.com" className="text-primary underline">contact@sarkpharmatech.com</a></li>
+                        <li>Contact Form: <a href="/about#contact" className="text-primary underline">Click Here</a></li>
                         <li>Response time: 1–2 business days</li>
                     </ul>
                 </section>

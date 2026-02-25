@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function ResourcesPage() {
     return (
-        <div className="max-w-6xl mx-auto pb-16 space-y-12">
+        <div className="max-w-6xl mx-auto pt-6 pb-16 space-y-12">
             {/* Hero */}
             <section className="relative rounded-3xl overflow-hidden p-10 md:p-14 text-center shadow-xl">
                 <div className="absolute inset-0 bg-gradient-to-br from-[#0f2744]/95 via-[#0d6e66]/90 to-primary z-0" />
@@ -35,7 +35,7 @@ export default function ResourcesPage() {
                     <div className="h-40 bg-muted flex items-center justify-center relative overflow-hidden">
                         <div className="absolute inset-0 bg-primary/10 group-hover:bg-primary/20 transition-colors z-0" />
                         <FileText className="h-16 w-16 text-primary/40 z-10" />
-                        <Badge className="absolute top-4 right-4 bg-background/80 backdrop-blur border">Beta</Badge>
+                        <Badge className="absolute top-4 right-4 bg-background/80 text-foreground backdrop-blur border">Beta</Badge>
                     </div>
                     <CardHeader className="pb-3">
                         <CardTitle className="text-xl group-hover:text-primary transition-colors">
@@ -45,8 +45,8 @@ export default function ResourcesPage() {
                             Create ATS-friendly resumes tailored for pharmaceutical quality roles. Include standard GMP action verbs.
                         </CardDescription>
                     </CardHeader>
-                    <CardContent className="flex flex-col flex-1 pb-6 mt-auto">
-                        <Button variant="outline" className="w-full mt-4 group-hover:bg-primary group-hover:text-primary-foreground transition-colors" asChild>
+                    <CardContent className="flex flex-col flex-1 pb-6">
+                        <Button variant="outline" className="w-full mt-auto group-hover:bg-primary group-hover:text-primary-foreground transition-colors" asChild>
                             <Link href="/resources/resume-builder">
                                 Launch Builder <ArrowRight className="ml-2 h-4 w-4" />
                             </Link>
@@ -59,7 +59,7 @@ export default function ResourcesPage() {
                     <div className="h-40 bg-muted flex items-center justify-center relative overflow-hidden">
                         <div className="absolute inset-0 bg-secondary/10 group-hover:bg-secondary/20 transition-colors z-0" />
                         <Calculator className="h-16 w-16 text-secondary/40 z-10" />
-                        <Badge className="absolute top-4 right-4 bg-background/80 backdrop-blur border">New</Badge>
+                        <Badge className="absolute top-4 right-4 bg-background/80 text-foreground backdrop-blur border">New</Badge>
                     </div>
                     <CardHeader className="pb-3">
                         <CardTitle className="text-xl group-hover:text-secondary transition-colors">
@@ -69,8 +69,8 @@ export default function ResourcesPage() {
                             Compare your compensation against industry benchmarks based on department, experience, and location.
                         </CardDescription>
                     </CardHeader>
-                    <CardContent className="flex flex-col flex-1 pb-6 mt-auto">
-                        <Button variant="outline" className="w-full mt-4 group-hover:bg-secondary group-hover:text-secondary-foreground transition-colors" asChild>
+                    <CardContent className="flex flex-col flex-1 pb-6">
+                        <Button variant="outline" className="w-full mt-auto group-hover:bg-secondary group-hover:text-secondary-foreground transition-colors" asChild>
                             <Link href="/resources/salary-calculator">
                                 Access Calculator
                             </Link>
@@ -93,8 +93,8 @@ export default function ResourcesPage() {
                             A curated database of the most common technical questions asked during QA/QC and Regulatory job interviews.
                         </CardDescription>
                     </CardHeader>
-                    <CardContent className="flex flex-col flex-1 pb-6 mt-auto">
-                        <Button variant="outline" className="w-full mt-4 group-hover:border-blue-500 group-hover:text-blue-600 transition-colors" asChild>
+                    <CardContent className="flex flex-col flex-1 pb-6">
+                        <Button variant="outline" className="w-full mt-auto group-hover:border-blue-500 group-hover:text-blue-600 transition-colors" asChild>
                             <Link href="/insights?cat=Career">View Questions</Link>
                         </Button>
                     </CardContent>

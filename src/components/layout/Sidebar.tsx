@@ -65,7 +65,7 @@ export function AppSidebar() {
                                     <SidebarMenuButton
                                         asChild
                                         isActive={pathname.startsWith(item.url)}
-                                        className="rounded-lg transition-all hover:bg-primary/10 data-[active=true]:bg-primary/15 data-[active=true]:text-primary data-[active=true]:font-semibold"
+                                        className="rounded-lg transition-all text-slate-600 dark:text-slate-300 font-medium hover:bg-primary/10 hover:text-foreground data-[active=true]:bg-primary/15 data-[active=true]:text-primary data-[active=true]:font-bold"
                                     >
                                         <Link href={item.url} className="flex items-center gap-3 px-3 py-2">
                                             <item.icon className="h-4 w-4 shrink-0" />
@@ -92,7 +92,7 @@ export function AppSidebar() {
                                             <SidebarMenuButton
                                                 asChild
                                                 isActive={pathname.startsWith(item.url)}
-                                                className="rounded-lg transition-all hover:bg-primary/10 data-[active=true]:bg-primary/15 data-[active=true]:text-primary data-[active=true]:font-semibold"
+                                                className="rounded-lg transition-all text-slate-600 dark:text-slate-300 font-medium hover:bg-primary/10 hover:text-foreground data-[active=true]:bg-primary/15 data-[active=true]:text-primary data-[active=true]:font-bold"
                                             >
                                                 <Link href={item.url} className="flex items-center gap-3 px-3 py-2">
                                                     <IconComponent className="h-4 w-4 shrink-0" />

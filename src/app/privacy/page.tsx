@@ -73,7 +73,7 @@ export default function PrivacyPolicyPage() {
 
                 <section>
                     <h2>5. Data Retention</h2>
-                    <p>We retain contact form submissions and purchase records for up to 3 years for business correspondence purposes. User authentication data is retained while your account is active. You may request deletion at any time by emailing <a href="mailto:contact@sarkpharmatech.com">contact@sarkpharmatech.com</a>.</p>
+                    <p>We retain contact form submissions and purchase records for up to 3 years for business correspondence purposes. User authentication data is retained while your account is active. You may request deletion at any time by <a href="/about#contact" className="text-primary underline">contacting us</a>.</p>
                 </section>
 
                 <section>
@@ -84,12 +84,12 @@ export default function PrivacyPolicyPage() {
                         <li>Request correction or deletion of your data.</li>
                         <li>Withdraw consent at any time.</li>
                     </ul>
-                    <p>To exercise these rights, contact us at <a href="mailto:contact@sarkpharmatech.com">contact@sarkpharmatech.com</a>.</p>
+                    <p>To exercise these rights, <a href="/about#contact" className="text-primary underline">contact us</a>.</p>
                 </section>
 
                 <section>
                     <h2>7. Contact</h2>
-                    <p>For any privacy-related queries, please email <a href="mailto:contact@sarkpharmatech.com">contact@sarkpharmatech.com</a>.</p>
+                    <p>For any privacy-related queries, please <a href="/about#contact" className="text-primary underline">contact us</a>.</p>
                 </section>
             </div>
         </div>

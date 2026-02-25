@@ -61,7 +61,7 @@ export default function DisclaimerPage() {
 
                 <section>
                     <h2>Contact</h2>
-                    <p>Questions regarding this disclaimer? Email us at <a href="mailto:contact@sarkpharmatech.com" className="text-primary underline">contact@sarkpharmatech.com</a>.</p>
+                    <p>Questions regarding this disclaimer? <a href="/about#contact" className="text-primary underline">Contact us</a>.</p>
                 </section>
             </div>
         </div>

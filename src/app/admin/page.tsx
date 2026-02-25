@@ -11,7 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { FileText, Building2, UploadCloud, Trash2, ShieldCheck, Newspaper, Users, CreditCard, GraduationCap } from 'lucide-react';
+import { FileText, Building2, UploadCloud, Trash2, ShieldCheck, Newspaper, Users, CreditCard, GraduationCap, PackageOpen } from 'lucide-react';
 import { supabase } from '@/utils/supabase/client';
 
 export default function AdminPage() {
@@ -30,6 +30,9 @@ export default function AdminPage() {
     const addCourse = usePharmaStore(state => state.addCourse);
     const deleteCourse = usePharmaStore(state => state.deleteCourse);
     const courses = usePharmaStore(state => state.courses);
+
+    const bundleLinks = usePharmaStore(state => state.bundleLinks);
+    const updateBundleLink = usePharmaStore(state => state.updateBundleLink);
 
     const initialize = usePharmaStore(state => state.initialize);
     const isInitialized = usePharmaStore(state => state.isInitialized);
@@ -63,6 +66,12 @@ export default function AdminPage() {
     const [courseFiles, setCourseFiles] = useState<File[]>([]);
     const [isCourseUploading, setIsCourseUploading] = useState(false);
 
+    // Bundle form state
+    const [qmsLink, setQmsLink] = useState('');
+    const [whoLink, setWhoLink] = useState('');
+    const [euLink, setEuLink] = useState('');
+    const [isSavingBundles, setIsSavingBundles] = useState(false);
+
     // Admin Auth State
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [adminUser, setAdminUser] = useState('');
@@ -78,6 +87,15 @@ export default function AdminPage() {
         { id: '3', email: 'auditor.smith@agency.gov', role: 'User', joined: '2026-02-18' },
     ]);
     const [isLoadingAdminData, setIsLoadingAdminData] = useState(false);
+
+    // Sync store initial values into local state
+    useEffect(() => {
+        if (bundleLinks.length > 0) {
+            setQmsLink(bundleLinks.find(b => b.id === 'qms-package')?.file_url || qmsLink);
+            setWhoLink(bundleLinks.find(b => b.id === 'who-gmp')?.file_url || whoLink);
+            setEuLink(bundleLinks.find(b => b.id === 'eu-gmp')?.file_url || euLink);
+        }
+    }, [bundleLinks]);
 
     useEffect(() => {
         if (isAuthenticated) {
@@ -273,6 +291,22 @@ export default function AdminPage() {
         alert('Course Added Successfully!');
     };
 
+    const handleSaveBundles = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsSavingBundles(true);
+        try {
+            if (qmsLink) await updateBundleLink('qms-package', qmsLink);
+            if (whoLink) await updateBundleLink('who-gmp', whoLink);
+            if (euLink) await updateBundleLink('eu-gmp', euLink);
+            alert('Bundle Links saved successfully! Users purchasing these packages will now receive these links.');
+        } catch (error) {
+            console.error('Error saving bundle links:', error);
+            alert('Failed to save bundle links.');
+        } finally {
+            setIsSavingBundles(false);
+        }
+    };
+
     if (!isAuthenticated) {
         return (
             <div className="flex min-h-[60vh] items-center justify-center p-4">
@@ -338,14 +372,15 @@ export default function AdminPage() {
                     <TabsTrigger value="insights" className="flex items-center gap-2">
                         <Newspaper className="h-4 w-4" /> Insights
                     </TabsTrigger>
-                    <TabsTrigger value="users" className="flex items-center gap-2">
-                        <Users className="h-4 w-4" /> Users
-                    </TabsTrigger>
+
                     <TabsTrigger value="payments" className="flex items-center gap-2">
                         <CreditCard className="h-4 w-4" /> Payments
                     </TabsTrigger>
                     <TabsTrigger value="courses" className="flex items-center gap-2">
                         <GraduationCap className="h-4 w-4" /> Courses
+                    </TabsTrigger>
+                    <TabsTrigger value="bundles" className="flex items-center gap-2">
+                        <PackageOpen className="h-4 w-4" /> Bundles
                     </TabsTrigger>
                 </TabsList>
 
@@ -589,6 +624,7 @@ export default function AdminPage() {
                                                 <SelectItem value="Microbiology">Microbiology</SelectItem>
                                                 <SelectItem value="Supply Chain">Supply Chain</SelectItem>
                                                 <SelectItem value="Manufacturing">Manufacturing</SelectItem>
+                                                <SelectItem value="Career">Career / Interview Q&A</SelectItem>
                                                 <SelectItem value="General">General</SelectItem>
                                             </SelectContent>
                                         </Select>
@@ -667,32 +703,7 @@ export default function AdminPage() {
                     </Card>
                 </TabsContent>
 
-                <TabsContent value="users">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>User Management</CardTitle>
-                            <CardDescription>View registered users. Full Supabase Auth sync coming soon.</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="space-y-4">
-                                {usersList.map(user => (
-                                    <div key={user.id} className="flex items-center justify-between p-3 rounded-md border bg-muted/20">
-                                        <div className="flex items-center gap-3">
-                                            <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center">
-                                                <Users className="h-4 w-4 text-primary" />
-                                            </div>
-                                            <div>
-                                                <p className="font-medium text-sm">{user.email}</p>
-                                                <p className="text-xs text-muted-foreground">Joined: {user.joined}</p>
-                                            </div>
-                                        </div>
-                                        <Badge variant={user.role === 'Admin' ? 'default' : 'secondary'}>{user.role}</Badge>
-                                    </div>
-                                ))}
-                            </div>
-                        </CardContent>
-                    </Card>
-                </TabsContent>
+
 
                 <TabsContent value="payments">
                     <Card>
@@ -872,6 +883,62 @@ export default function AdminPage() {
                                     ))
                                 )}
                             </div>
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+
+                <TabsContent value="bundles">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Manage Premium Bundles</CardTitle>
+                            <CardDescription>Updates the secure Google Drive / Cloud links that are automatically emailed or presented to buyers upon successful purchase of a package.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <form onSubmit={handleSaveBundles} className="space-y-6">
+                                <div className="space-y-3 p-4 border rounded-lg bg-card/50">
+                                    <h3 className="font-bold flex items-center gap-2"><ShieldCheck className="h-5 w-5 text-primary" /> Complete QMS Package</h3>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="qmsLink">Download URL (Google Drive / Zip URL)</Label>
+                                        <Input
+                                            id="qmsLink"
+                                            placeholder="https://drive.google.com/..."
+                                            value={qmsLink}
+                                            onChange={(e) => setQmsLink(e.target.value)}
+                                        />
+                                        <p className="text-xs text-muted-foreground">This link unlocks the 250+ SOP standard library package.</p>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-3 p-4 border rounded-lg bg-card/50">
+                                    <h3 className="font-bold flex items-center gap-2"><ShieldCheck className="h-5 w-5 text-secondary" /> WHO-GMP Package</h3>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="whoLink">Download URL</Label>
+                                        <Input
+                                            id="whoLink"
+                                            placeholder="https://drive.google.com/..."
+                                            value={whoLink}
+                                            onChange={(e) => setWhoLink(e.target.value)}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="space-y-3 p-4 border rounded-lg bg-card/50">
+                                    <h3 className="font-bold flex items-center gap-2"><ShieldCheck className="h-5 w-5 text-blue-500" /> EU-GMP Annex 1 Package</h3>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="euLink">Download URL</Label>
+                                        <Input
+                                            id="euLink"
+                                            placeholder="https://drive.google.com/..."
+                                            value={euLink}
+                                            onChange={(e) => setEuLink(e.target.value)}
+                                        />
+                                    </div>
+                                </div>
+
+                                <Button type="submit" className="w-full" disabled={isSavingBundles}>
+                                    {isSavingBundles ? 'Saving Links...' : 'Save All Bundle Links'}
+                                </Button>
+                            </form>
                         </CardContent>
                     </Card>
                 </TabsContent>

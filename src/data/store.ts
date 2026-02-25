@@ -26,6 +26,12 @@ export type Course = {
     created_at?: string;
 };
 
+export type BundleLink = {
+    id: string;
+    file_url: string;
+    updated_at: string;
+};
+
 export type Department = {
     id: string;
     title: string;
@@ -41,6 +47,7 @@ interface PharmaStore {
     departments: Department[];
     insights: Insight[];
     courses: Course[];
+    bundleLinks: BundleLink[];
     session: Session | null;
     isInitialized: boolean;
     initialize: () => Promise<void>;
@@ -52,6 +59,7 @@ interface PharmaStore {
     deleteInsight: (id: string) => Promise<void>;
     addCourse: (course: Omit<Course, 'id' | 'created_at'>) => Promise<void>;
     deleteCourse: (id: string) => Promise<void>;
+    updateBundleLink: (id: string, file_url: string) => Promise<void>;
 }
 
 export const usePharmaStore = create<PharmaStore>((set, get) => ({
@@ -59,6 +67,7 @@ export const usePharmaStore = create<PharmaStore>((set, get) => ({
     departments: [],
     insights: [],
     courses: [],
+    bundleLinks: [],
     session: null,
     isInitialized: false,
 
@@ -71,6 +80,7 @@ export const usePharmaStore = create<PharmaStore>((set, get) => ({
             const { data: sopData, error: sopError } = await supabase.from('sops').select('*');
             const { data: insightData } = await supabase.from('insights').select('*').order('created_at', { ascending: false });
             const { data: courseData } = await supabase.from('courses').select('*').order('created_at', { ascending: false });
+            const { data: bundleData } = await supabase.from('bundle_links').select('*');
 
             // Initialize Auth Session
             const { data: { session: initialSession } } = await supabase.auth.getSession();
@@ -91,6 +101,7 @@ export const usePharmaStore = create<PharmaStore>((set, get) => ({
                 departments: deptData as Department[],
                 insights: (insightData as Insight[]) || [],
                 courses: (courseData as Course[]) || [],
+                bundleLinks: (bundleData as BundleLink[]) || [],
                 session: initialSession,
                 isInitialized: true
             });
@@ -218,6 +229,27 @@ export const usePharmaStore = create<PharmaStore>((set, get) => ({
             set((state) => ({ courses: state.courses.filter(c => c.id !== id) }));
         } catch (e) {
             console.warn('Failed to delete Course from Supabase.', e);
+        }
+    },
+
+    updateBundleLink: async (id, file_url) => {
+        try {
+            const { error } = await supabase
+                .from('bundle_links')
+                .upsert({ id, file_url, updated_at: new Date().toISOString() });
+
+            if (error) { console.error('Supabase Upsert Error (bundle link):', error); throw error; }
+
+            set((state) => {
+                const existing = state.bundleLinks.find(b => b.id === id);
+                if (existing) {
+                    return { bundleLinks: state.bundleLinks.map(b => b.id === id ? { ...b, file_url, updated_at: new Date().toISOString() } : b) };
+                } else {
+                    return { bundleLinks: [...state.bundleLinks, { id, file_url, updated_at: new Date().toISOString() }] };
+                }
+            });
+        } catch (e) {
+            console.warn('Failed to update Bundle Link.', e);
         }
     }
 }));

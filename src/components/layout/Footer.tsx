@@ -53,7 +53,7 @@ export function Footer() {
                             All documents structured to FDA 21 CFR, ICH Q7/Q10, WHO GMP, EU GMP, and USP requirements.
                         </p>
                         <div className="flex flex-col gap-1.5 text-sm pt-1">
-                            <a href="mailto:contact@sarkpharmatech.com" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors">
+                            <a href="/about#contact" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors">
                                 <Mail className="h-4 w-4" /> contact@sarkpharmatech.com
                             </a>
                             <a href="tel:+917350185431" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors">
