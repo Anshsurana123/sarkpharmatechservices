@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Wrench, FileText, Calculator, MessageSquare, ArrowRight } from "lucide-react";
 import Link from 'next/link';
+import Image from "next/image";
 
 export const metadata: Metadata = {
     title: 'Career Resources | Sark Pharma Tech Services',
@@ -15,8 +16,9 @@ export default function ResourcesPage() {
         <div className="max-w-6xl mx-auto pt-6 pb-16 space-y-12">
             {/* Hero */}
             <section className="relative rounded-3xl overflow-hidden p-10 md:p-14 text-center shadow-xl">
-                <div className="absolute inset-0 bg-gradient-to-br from-[#0f2744]/95 via-[#0d6e66]/90 to-primary z-0" />
-                <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:32px_32px] z-0" />
+                <Image src="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=1600&q=80" alt="Career Resources" fill className="object-cover z-0" priority />
+                <div className="absolute inset-0 bg-gradient-to-br from-[#0a1628]/95 via-[#0d6e66]/85 to-[#0f2744]/70 z-[1]" />
+                <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:32px_32px] z-[1]" />
                 <div className="relative z-10 text-white space-y-4">
                     <div className="inline-flex items-center justify-center h-16 w-16 rounded-2xl bg-white/10 backdrop-blur border border-white/20 mx-auto mb-2">
                         <Wrench className="h-8 w-8 text-teal-300" />

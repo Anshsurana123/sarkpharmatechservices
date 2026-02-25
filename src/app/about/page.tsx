@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ShieldCheck, BookOpen, FileText, Lightbulb, Mail, Globe, Send, Phone, MessageCircle, Target, Eye, Award } from "lucide-react";
+import Image from "next/image";
 
 export default function AboutPage() {
     return (
@@ -10,10 +11,11 @@ export default function AboutPage() {
 
             {/* Hero */}
             <section className="relative rounded-3xl overflow-hidden p-10 md:p-16 text-center shadow-xl">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary/90 to-secondary/80 z-0" />
-                <div className="absolute top-[-40px] left-[-40px] w-64 h-64 bg-secondary/30 rounded-full blur-3xl animate-pulse z-0" />
-                <div className="absolute bottom-[-40px] right-[-40px] w-72 h-72 bg-primary/30 rounded-full blur-3xl animate-pulse z-0" style={{ animationDelay: '1.2s' }} />
-                <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:32px_32px] z-0" />
+                <Image src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1600&q=80" alt="Sark Pharma Headquarters" fill className="object-cover z-0" priority />
+                <div className="absolute inset-0 bg-gradient-to-br from-[#0a1628]/95 via-[#0f2744]/85 to-[#0d6e66]/70 z-[1]" />
+                <div className="absolute top-[-40px] left-[-40px] w-64 h-64 bg-secondary/30 rounded-full blur-3xl animate-pulse z-[1]" />
+                <div className="absolute bottom-[-40px] right-[-40px] w-72 h-72 bg-primary/30 rounded-full blur-3xl animate-pulse z-[1]" style={{ animationDelay: '1.2s' }} />
+                <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:32px_32px] z-[1]" />
                 <div className="relative z-10 text-primary-foreground space-y-4">
                     <div className="inline-flex items-center justify-center h-16 w-16 rounded-2xl bg-white/15 backdrop-blur border border-white/20 mx-auto mb-2">
                         <ShieldCheck className="h-8 w-8 text-white" />

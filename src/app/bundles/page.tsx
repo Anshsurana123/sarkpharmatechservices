@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { PackageOpen, ShieldCheck, CheckCircle2, ShoppingCart, Globe, FileText, ArrowRight } from "lucide-react";
 import { useRazorpay } from '@/hooks/useRazorpay';
 import Link from 'next/link';
+import Image from "next/image";
 
 export default function BundlesPage() {
     const { processPayment, isProcessing } = useRazorpay();
@@ -18,8 +19,9 @@ export default function BundlesPage() {
         <div className="max-w-6xl mx-auto pt-6 pb-16 space-y-12">
             {/* Hero */}
             <section className="relative rounded-3xl overflow-hidden p-10 md:p-14 text-center shadow-xl">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/95 via-primary to-secondary/90 z-0" />
-                <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:32px_32px] z-0" />
+                <Image src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1600&q=80" alt="Document Bundles" fill className="object-cover z-0" priority />
+                <div className="absolute inset-0 bg-gradient-to-br from-[#0a1628]/95 via-[#0f2744]/85 to-[#0d6e66]/70 z-[1]" />
+                <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:32px_32px] z-[1]" />
                 <div className="relative z-10 text-primary-foreground space-y-4">
                     <div className="inline-flex items-center justify-center h-16 w-16 rounded-2xl bg-white/15 backdrop-blur border border-white/20 mx-auto mb-2">
                         <PackageOpen className="h-8 w-8 text-white" />

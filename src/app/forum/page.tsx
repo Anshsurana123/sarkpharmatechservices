@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Users, MessagesSquare, Clock, Plus, ArrowRight } from "lucide-react";
 import { supabase } from '@/utils/supabase/client';
 import Link from 'next/link';
+import Image from 'next/image';
 
 type ForumPost = {
     id: string;
@@ -105,14 +106,20 @@ export default function ForumPage() {
     return (
         <div className="max-w-5xl mx-auto pb-16 space-y-8">
             {/* Hero */}
-            <section className="text-center py-10 bg-muted/30 rounded-3xl border border-primary/10">
-                <div className="inline-flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 mx-auto mb-4">
-                    <Users className="h-8 w-8 text-primary" />
+            <section className="relative rounded-3xl overflow-hidden p-10 md:p-14 text-center shadow-xl mb-8">
+                <Image src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=1600&q=80" alt="Professional Networking" fill className="object-cover z-0" priority />
+                <div className="absolute inset-0 bg-gradient-to-br from-[#0a1628]/95 via-[#0d6e66]/85 to-[#0f2744]/70 z-[1]" />
+                <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:32px_32px] z-[1]" />
+                <div className="relative z-10 text-white space-y-4">
+                    <div className="inline-flex items-center justify-center h-16 w-16 rounded-2xl bg-white/10 backdrop-blur border border-white/20 mx-auto mb-2">
+                        <Users className="h-8 w-8 text-white" />
+                    </div>
+                    <Badge className="bg-white/20 hover:bg-white/30 text-white border-none mx-auto mb-2 block w-max">Community Forum</Badge>
+                    <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight">The Pharma Quality Network</h1>
+                    <p className="text-lg text-white/80 max-w-2xl mx-auto">
+                        A dedicated community where compliance professionals discuss audit findings, regulatory changes, and share practical solutions.
+                    </p>
                 </div>
-                <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight">The Pharma Quality Network</h1>
-                <p className="text-lg text-muted-foreground max-w-2xl mx-auto mt-4">
-                    A dedicated community where compliance professionals discuss audit findings, regulatory changes, and share practical solutions.
-                </p>
             </section>
 
             <div className="flex flex-col md:flex-row gap-6">
