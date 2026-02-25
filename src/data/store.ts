@@ -128,6 +128,7 @@ export const usePharmaStore = create<PharmaStore>((set, get) => ({
             set((state) => ({ sops: [...state.sops, newSop] }));
         } catch (e) {
             console.warn('Failed to insert SOP to Supabase.', e);
+            throw e;
         }
     },
 
@@ -145,6 +146,7 @@ export const usePharmaStore = create<PharmaStore>((set, get) => ({
             set((state) => ({ departments: [...state.departments, newDept] }));
         } catch (e) {
             console.warn('Failed to insert Department to Supabase.', e);
+            throw e;
         }
     },
 
@@ -194,6 +196,7 @@ export const usePharmaStore = create<PharmaStore>((set, get) => ({
             set((state) => ({ insights: [newInsight, ...state.insights] }));
         } catch (e) {
             console.warn('Failed to insert Insight to Supabase.', e);
+            throw e;
         }
     },
 
@@ -215,10 +218,14 @@ export const usePharmaStore = create<PharmaStore>((set, get) => ({
         };
         try {
             const { error } = await supabase.from('courses').insert([newCourse]);
-            if (error) { console.error('Supabase Insert Error (course):', error); throw error; }
+            if (error) {
+                console.error('Supabase Insert Error (course):', JSON.stringify(error, null, 2), error);
+                throw error;
+            }
             set((state) => ({ courses: [newCourse, ...state.courses] }));
         } catch (e) {
             console.warn('Failed to insert Course to Supabase.', e);
+            throw e;
         }
     },
 

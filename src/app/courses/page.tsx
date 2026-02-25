@@ -85,10 +85,17 @@ export default function CoursesPage() {
 
                             return (
                                 <Card key={course.id} className="flex flex-col border shadow-sm hover:shadow-lg transition-shadow overflow-hidden group">
-                                    <div className="h-40 bg-muted flex items-center justify-center relative overflow-hidden">
-                                        <div className={`absolute inset-0 ${theme.light} ${theme.hover} transition-colors z-0`} />
-                                        <CheckCircle2 className={`h-16 w-16 ${theme.text} opacity-40 z-10`} />
-                                        <Badge className="absolute top-4 right-4 bg-background/80 backdrop-blur text-foreground border">${course.price}</Badge>
+                                    <div className="h-40 bg-muted flex flex-col items-center justify-center relative overflow-hidden">
+                                        {course.image_url ? (
+                                            /* eslint-disable-next-line @next/next/no-img-element */
+                                            <img src={course.image_url} alt={course.title} className="w-full h-full object-cover z-0" />
+                                        ) : (
+                                            <>
+                                                <div className={`absolute inset-0 ${theme.light} ${theme.hover} transition-colors z-0`} />
+                                                <CheckCircle2 className={`h-16 w-16 ${theme.text} opacity-40 z-10`} />
+                                            </>
+                                        )}
+                                        <Badge className="absolute top-4 right-4 bg-background/80 backdrop-blur text-foreground border shadow-sm">${course.price}</Badge>
                                     </div>
                                     <CardHeader className="pb-3">
                                         <div className="flex gap-2 mb-2">

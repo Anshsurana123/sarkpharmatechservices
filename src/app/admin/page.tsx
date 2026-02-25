@@ -64,6 +64,7 @@ export default function AdminPage() {
     const [courseLevel, setCourseLevel] = useState('Beginner');
     const [courseModules, setCourseModules] = useState('');
     const [courseFiles, setCourseFiles] = useState<File[]>([]);
+    const [courseImage, setCourseImage] = useState<File | null>(null);
     const [isCourseUploading, setIsCourseUploading] = useState(false);
 
     // Bundle form state
@@ -248,6 +249,22 @@ export default function AdminPage() {
         setIsCourseUploading(true);
 
         const uploadedFiles: { name: string, url: string, type: string }[] = [];
+        let uploadedImageUrl: string | undefined = undefined;
+
+        if (courseImage) {
+            const imageName = `CRS-IMG-${Date.now()}-${courseImage.name.replace(/[^a-zA-Z0-9.]/g, '_')}`;
+            const { data: imgData, error: imgError } = await supabase.storage.from('courses').upload(imageName, courseImage);
+
+            if (imgError) {
+                console.error('Course image upload error:', imgError);
+                alert(`Failed to upload image ${courseImage.name}. Please ensure the 'courses' storage bucket exists and is public.`);
+                setIsCourseUploading(false);
+                return;
+            } else if (imgData) {
+                const { data: imgPublicData } = supabase.storage.from('courses').getPublicUrl(imageName);
+                uploadedImageUrl = imgPublicData.publicUrl;
+            }
+        }
 
         if (courseFiles.length > 0) {
             for (const file of courseFiles) {
@@ -256,7 +273,9 @@ export default function AdminPage() {
 
                 if (error) {
                     console.error('Course file upload error:', error);
-                    alert(`Failed to upload ${file.name}.`);
+                    alert(`Failed to upload ${file.name}. Please ensure the 'courses' storage bucket exists and is public.`);
+                    setIsCourseUploading(false);
+                    return;
                 } else if (data) {
                     const { data: publicData } = supabase.storage.from('courses').getPublicUrl(fileName);
                     uploadedFiles.push({
@@ -268,27 +287,37 @@ export default function AdminPage() {
             }
         }
 
-        await addCourse({
-            title: courseTitle,
-            description: courseDesc,
-            price: Number(coursePrice),
-            duration: courseDuration,
-            level: courseLevel,
-            modules: courseModules.split(',').map(m => m.trim()).filter(Boolean),
-            files: uploadedFiles
-        });
+        try {
+            await addCourse({
+                title: courseTitle,
+                description: courseDesc,
+                price: Number(coursePrice),
+                duration: courseDuration,
+                level: courseLevel,
+                modules: courseModules.split(',').map(m => m.trim()).filter(Boolean),
+                files: uploadedFiles,
+                image_url: uploadedImageUrl
+            });
 
-        setCourseTitle('');
-        setCourseDesc('');
-        setCoursePrice('');
-        setCourseDuration('');
-        setCourseLevel('Beginner');
-        setCourseModules('');
-        setCourseFiles([]);
-        setIsCourseUploading(false);
-        const el = document.getElementById('course-files-upload') as HTMLInputElement;
-        if (el) el.value = '';
-        alert('Course Added Successfully!');
+            setCourseTitle('');
+            setCourseDesc('');
+            setCoursePrice('');
+            setCourseDuration('');
+            setCourseLevel('Beginner');
+            setCourseModules('');
+            setCourseFiles([]);
+            setCourseImage(null);
+            setIsCourseUploading(false);
+            const el = document.getElementById('course-files-upload') as HTMLInputElement;
+            if (el) el.value = '';
+            const imgEl = document.getElementById('course-image-upload') as HTMLInputElement;
+            if (imgEl) imgEl.value = '';
+            alert('Course Added Successfully!');
+        } catch (error) {
+            console.error('Error adding course:', error);
+            alert('Failed to add the course to the database. Please verify your Supabase tables.');
+            setIsCourseUploading(false);
+        }
     };
 
     const handleSaveBundles = async (e: React.FormEvent) => {
@@ -844,6 +873,21 @@ export default function AdminPage() {
                                         {courseFiles.length > 0 && <span className="text-xs text-muted-foreground whitespace-nowrap">{courseFiles.length} files selected</span>}
                                     </div>
                                     <p className="text-xs text-muted-foreground">Upload the course content. Users will be given access to these files after successful payment.</p>
+                                </div>
+                                <div className="space-y-2 pt-2 border-t">
+                                    <Label htmlFor="course-image-upload" className="flex items-center gap-2 mt-2">
+                                        Cover Image (Optional)
+                                    </Label>
+                                    <div className="flex items-center gap-4">
+                                        <Input
+                                            id="course-image-upload"
+                                            type="file"
+                                            accept="image/*"
+                                            onChange={(e) => setCourseImage(e.target.files ? e.target.files[0] : null)}
+                                            disabled={isCourseUploading}
+                                        />
+                                    </div>
+                                    <p className="text-xs text-muted-foreground">This image will be used as the preview thumbnail on the courses page.</p>
                                 </div>
                                 <Button type="submit" className="w-full mt-4" disabled={isCourseUploading}>
                                     {isCourseUploading ? 'Uploading & Creating...' : 'Create Course'}
