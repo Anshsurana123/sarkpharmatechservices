@@ -1,12 +1,17 @@
 import { NextResponse } from 'next/server';
 import Cerebras from '@cerebras/cerebras_cloud_sdk';
 
-const client = new Cerebras({
-    apiKey: process.env.CEREBRAS_API_KEY,
-});
-
 export async function POST(req: Request) {
     try {
+        if (!process.env.CEREBRAS_API_KEY) {
+            console.error('CEREBRAS_API_KEY is not set');
+            return NextResponse.json({ error: 'AI Service Configuration Error' }, { status: 500 });
+        }
+
+        const client = new Cerebras({
+            apiKey: process.env.CEREBRAS_API_KEY,
+        });
+
         const body = await req.json();
         const { summary, experience, skills } = body;
 
