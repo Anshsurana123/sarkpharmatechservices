@@ -56,10 +56,10 @@ export function Footer() {
                             <a href="/about#contact" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors">
                                 <Mail className="h-4 w-4" /> contact@sarkpharmatech.com
                             </a>
-                            <a href="tel:+917350185431" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors">
-                                <Phone className="h-4 w-4" /> +91 73501 85431
+                            <a href="tel:+918237750691" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors">
+                                <Phone className="h-4 w-4" /> +91 8237750691
                             </a>
-                            <a href="https://wa.me/917350185431" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-muted-foreground hover:text-green-500 transition-colors">
+                            <a href="https://wa.me/918237750691" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-muted-foreground hover:text-green-500 transition-colors">
                                 <MessageCircle className="h-4 w-4" /> WhatsApp Us
                             </a>
                             <div className="flex items-start gap-2 text-muted-foreground mt-1">

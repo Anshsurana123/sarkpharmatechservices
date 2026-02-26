@@ -72,7 +72,7 @@ export default function AboutPage() {
                             RS
                         </div>
                         <div>
-                            <p className="font-bold text-lg">Rupesh Surana</p>
+                            <p className="font-bold text-lg">SARK Pharma limited</p>
                             <p className="text-muted-foreground text-sm">Founder, Pharmaceutical Quality &amp; Compliance Expert</p>
                         </div>
                     </div>
@@ -195,13 +195,13 @@ export default function AboutPage() {
                         </div>
                         <div>
                             <p className="font-semibold text-sm mb-1">Call Us</p>
-                            <a href="tel:+917350185431" className="flex items-center gap-2 text-primary hover:underline text-sm">
-                                <Phone className="h-4 w-4" /> +91 73501 85431
+                            <a href="tel:+918237750691" className="flex items-center gap-2 text-primary hover:underline text-sm">
+                                <Phone className="h-4 w-4" /> +91 8237750691
                             </a>
                         </div>
                         <div>
                             <p className="font-semibold text-sm mb-1">WhatsApp</p>
-                            <a href="https://wa.me/917350185431" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-green-600 hover:underline text-sm">
+                            <a href="https://wa.me/918237750691" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-green-600 hover:underline text-sm">
                                 <MessageCircle className="h-4 w-4" /> Chat on WhatsApp
                             </a>
                         </div>
