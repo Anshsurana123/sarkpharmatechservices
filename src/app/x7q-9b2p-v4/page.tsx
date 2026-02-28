@@ -52,6 +52,7 @@ export default function AdminPage() {
     // Policy form state
     const [policyTitle, setPolicyTitle] = useState('');
     const [policyDept, setPolicyDept] = useState('');
+    const [policyType, setPolicyType] = useState('');
     const [policyContent, setPolicyContent] = useState('');
     const [policyPrice, setPolicyPrice] = useState('');
     const [policyFile, setPolicyFile] = useState<File | null>(null);
@@ -233,7 +234,7 @@ export default function AdminPage() {
         await addPolicy({
             title: policyTitle,
             department: policyDept,
-            documentType: 'Policy',
+            documentType: policyType,
             status: 'Approved',
             date: new Date().toISOString().split('T')[0],
             author: 'Admin User',
@@ -244,6 +245,7 @@ export default function AdminPage() {
 
         setPolicyTitle('');
         setPolicyDept('');
+        setPolicyType('');
         setPolicyContent('');
         setPolicyPrice('');
         setPolicyFile(null);
@@ -694,6 +696,23 @@ export default function AdminPage() {
                                         </Select>
                                     </div>
                                     <div className="space-y-2">
+                                        <Label>Policy Type</Label>
+                                        <Select value={policyType} onValueChange={setPolicyType} required>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Select type" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="Quality policy">Quality policy</SelectItem>
+                                                <SelectItem value="SHE policy">SHE policy</SelectItem>
+                                                <SelectItem value="Validation policy">Validation policy</SelectItem>
+                                                <SelectItem value="Site Master file">Site Master file</SelectItem>
+                                                <SelectItem value="Pharmacovigilance system master file">Pharmacovigilance system master file</SelectItem>
+                                                <SelectItem value="Quality Manual">Quality Manual</SelectItem>
+                                                <SelectItem value="Validation master plan">Validation master plan</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                    <div className="space-y-2 col-span-2">
                                         <Label>Document Upload</Label>
                                         <div className="flex items-center gap-4">
                                             <Input
