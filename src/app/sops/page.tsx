@@ -2,6 +2,7 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 import { usePharmaStore } from '@/data/store';
 import { useRazorpay } from '@/hooks/useRazorpay';
 import { SOPTableSkeleton } from '@/components/shared/Skeletons';
@@ -162,7 +163,7 @@ function SOPDashboardContent() {
                                                 </div>
                                             </TableCell>
                                             <TableCell>
-                                                <span className="font-semibold text-foreground/90">{sop.title}</span>
+                                                <Link href={`/sops/${sop.id}`} className="font-semibold text-primary hover:underline">{sop.title}</Link>
                                                 <div className="text-xs text-muted-foreground mt-1">Updated {sop.date} • {sop.author}</div>
                                             </TableCell>
                                             <TableCell>

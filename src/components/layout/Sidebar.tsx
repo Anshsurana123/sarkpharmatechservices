@@ -22,7 +22,6 @@ const mainNavItems = [
     { title: 'SOP Database', url: '/sops', icon: FileText },
     { title: 'Bundles & Packages', url: '/bundles', icon: PackageOpen },
     { title: 'Courses & Training', url: '/courses', icon: GraduationCap },
-    { title: 'SOP Library', url: '/library', icon: BookOpen },
     { title: 'Career Resources', url: '/resources', icon: Wrench },
     { title: 'Community Forum', url: '/forum', icon: Users },
 ];

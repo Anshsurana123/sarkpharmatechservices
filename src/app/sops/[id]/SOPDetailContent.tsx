@@ -10,6 +10,7 @@ import { FileText, Calendar, User, Building2, ShoppingCart } from 'lucide-react'
 import Link from 'next/link';
 import { useRazorpay } from '@/hooks/useRazorpay';
 import { Breadcrumbs } from '@/components/shared/Breadcrumbs';
+import { CustomerReviews } from '@/components/shared/CustomerReviews';
 
 export function SOPDetailContent({ params }: { params: Promise<{ id: string }> }) {
     const resolvedParams = use(params);
@@ -17,15 +18,7 @@ export function SOPDetailContent({ params }: { params: Promise<{ id: string }> }
     const { processPayment, isProcessing } = useRazorpay();
     const isInitialized = usePharmaStore(state => state.isInitialized);
 
-    if (!isInitialized) {
-        return <div className="p-8 text-center text-muted-foreground animate-pulse">Loading document data...</div>;
-    }
-
     const sop = sops.find(s => s.id === resolvedParams.id);
-
-    if (!sop) {
-        notFound();
-    }
 
     // Track recently viewed
     useEffect(() => {
@@ -37,7 +30,15 @@ export function SOPDetailContent({ params }: { params: Promise<{ id: string }> }
             const updated = [{ id: sop.id, title: sop.title, department: sop.department, date: sop.date, viewedAt: new Date().toISOString() }, ...filtered].slice(0, 10);
             localStorage.setItem('pharma_recently_viewed', JSON.stringify(updated));
         } catch (_) { }
-    }, [sop?.id]);
+    }, [sop?.id, sop?.title, sop?.department, sop?.date]);
+
+    if (!isInitialized) {
+        return <div className="p-8 text-center text-muted-foreground animate-pulse">Loading document data...</div>;
+    }
+
+    if (!sop) {
+        notFound();
+    }
 
     return (
         <div className="space-y-6 max-w-5xl mx-auto">
@@ -120,6 +121,9 @@ export function SOPDetailContent({ params }: { params: Promise<{ id: string }> }
                     </Card>
                 </div>
             </div>
+
+            {/* Customer Reviews Section */}
+            <CustomerReviews sopId={sop.id} />
         </div>
     );
 }

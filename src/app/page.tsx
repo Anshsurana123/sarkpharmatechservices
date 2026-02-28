@@ -84,9 +84,6 @@ export default function Home() {
                 Browse SOP Database <ArrowRight className="h-5 w-5" />
               </Link>
             </Button>
-            <Button size="lg" variant="outline" className="border-white/30 text-white bg-white/10 hover:bg-white/20 rounded-full backdrop-blur-sm text-base px-8 font-semibold" asChild>
-              <Link href="/library">Free SOP Library</Link>
-            </Button>
           </div>
         </div>
       </section>
@@ -181,14 +178,6 @@ export default function Home() {
           <Button variant="outline" className="w-full group-hover:border-blue-500 group-hover:text-blue-600 transition-colors" asChild>
             <Link href="/courses">Explore Courses</Link>
           </Button>
-        </div>
-
-        <div className="group bg-card text-card-foreground rounded-2xl p-6 border shadow-sm hover:shadow-lg hover:border-primary/30 transition-all duration-300">
-          <div className="h-12 w-12 rounded-xl bg-primary/10 dark:bg-primary/20 flex items-center justify-center mb-4 text-primary group-hover:scale-110 transition-transform duration-300">
-            <BookOpen className="h-6 w-6" />
-          </div>
-          <h3 className="text-xl font-semibold mb-2">Free SOP Library</h3>
-          <p className="text-muted-foreground text-sm leading-relaxed">Browse and read the full written content of our SOPs before purchasing. Understand the procedure, scope, and regulatory reference without any paywall.</p>
         </div>
 
         <div className="group bg-card text-card-foreground rounded-2xl p-6 border shadow-sm hover:shadow-lg hover:border-primary/30 transition-all duration-300">

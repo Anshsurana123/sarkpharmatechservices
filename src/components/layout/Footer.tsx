@@ -31,7 +31,6 @@ export function Footer() {
                                 { label: 'SOP Database', href: '/sops' },
                                 { label: 'Bundles & Packages', href: '/bundles' },
                                 { label: 'Courses & Training', href: '/courses' },
-                                { label: 'SOP Library (Free)', href: '/library' },
                                 { label: 'Regulatory Insights', href: '/insights' },
                                 { label: 'Career Resources', href: '/resources' },
                                 { label: 'Community Forum', href: '/forum' },
