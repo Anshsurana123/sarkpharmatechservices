@@ -58,6 +58,8 @@ export type Department = {
 interface PharmaStore {
     sops: SOP[];
     policies: Policy[];
+    protocols_reports: Policy[];
+    checklists_formats: Policy[];
     departments: Department[];
     insights: Insight[];
     courses: Course[];
@@ -67,9 +69,13 @@ interface PharmaStore {
     initialize: () => Promise<void>;
     addSop: (sop: Omit<SOP, 'id'>) => Promise<void>;
     addPolicy: (policy: Omit<Policy, 'id'>) => Promise<void>;
+    addProtocolReport: (doc: Omit<Policy, 'id'>) => Promise<void>;
+    addChecklistFormat: (doc: Omit<Policy, 'id'>) => Promise<void>;
     addDepartment: (dept: Omit<Department, 'id' | 'url'>) => Promise<void>;
     deleteSop: (id: string) => Promise<void>;
     deletePolicy: (id: string) => Promise<void>;
+    deleteProtocolReport: (id: string) => Promise<void>;
+    deleteChecklistFormat: (id: string) => Promise<void>;
     deleteDepartment: (id: string) => Promise<void>;
     addInsight: (insight: Omit<Insight, 'id'>) => Promise<void>;
     deleteInsight: (id: string) => Promise<void>;
@@ -81,6 +87,8 @@ interface PharmaStore {
 export const usePharmaStore = create<PharmaStore>((set, get) => ({
     sops: [],
     policies: [],
+    protocols_reports: [],
+    checklists_formats: [],
     departments: [],
     insights: [],
     courses: [],
@@ -96,6 +104,8 @@ export const usePharmaStore = create<PharmaStore>((set, get) => ({
             const { data: deptData, error: deptError } = await supabase.from('departments').select('*');
             const { data: sopData, error: sopError } = await supabase.from('sops').select('*');
             const { data: policyData } = await supabase.from('policies_presentations').select('*');
+            const { data: protocolData } = await supabase.from('protocols_reports').select('*');
+            const { data: checklistData } = await supabase.from('checklists_formats').select('*');
             const { data: insightData } = await supabase.from('insights').select('*').order('created_at', { ascending: false });
             const { data: courseData } = await supabase.from('courses').select('*').order('created_at', { ascending: false });
             const { data: bundleData } = await supabase.from('bundle_links').select('*');
@@ -117,6 +127,8 @@ export const usePharmaStore = create<PharmaStore>((set, get) => ({
             set({
                 sops: sopData as SOP[],
                 policies: (policyData as Policy[]) || [],
+                protocols_reports: (protocolData as Policy[]) || [],
+                checklists_formats: (checklistData as Policy[]) || [],
                 departments: deptData as Department[],
                 insights: (insightData as Insight[]) || [],
                 courses: (courseData as Course[]) || [],
@@ -171,6 +183,46 @@ export const usePharmaStore = create<PharmaStore>((set, get) => ({
         }
     },
 
+    addProtocolReport: async (doc) => {
+        const newDoc = {
+            ...doc,
+            id: `PR-${doc.department.substring(0, 2).toUpperCase()}-${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`
+        };
+
+        try {
+            const { error } = await supabase.from('protocols_reports').insert([newDoc]);
+            if (error) {
+                console.error('Supabase Insert Error:', error);
+                throw error;
+            }
+
+            set((state) => ({ protocols_reports: [...state.protocols_reports, newDoc] }));
+        } catch (e) {
+            console.warn('Failed to insert Protocol/Report to Supabase.', e);
+            throw e;
+        }
+    },
+
+    addChecklistFormat: async (doc) => {
+        const newDoc = {
+            ...doc,
+            id: `CF-${doc.department.substring(0, 2).toUpperCase()}-${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`
+        };
+
+        try {
+            const { error } = await supabase.from('checklists_formats').insert([newDoc]);
+            if (error) {
+                console.error('Supabase Insert Error:', error);
+                throw error;
+            }
+
+            set((state) => ({ checklists_formats: [...state.checklists_formats, newDoc] }));
+        } catch (e) {
+            console.warn('Failed to insert Checklist/Format to Supabase.', e);
+            throw e;
+        }
+    },
+
     addDepartment: async (dept) => {
         const id = dept.title.toLowerCase().replace(/[^a-z0-9]/g, '-');
         const newDept = { ...dept, id, url: `/departments/${id}` };
@@ -212,6 +264,32 @@ export const usePharmaStore = create<PharmaStore>((set, get) => ({
             set((state) => ({ policies: state.policies.filter(p => p.id !== id) }));
         } catch (e) {
             console.warn('Failed to delete Policy from Supabase.', e);
+        }
+    },
+
+    deleteProtocolReport: async (id) => {
+        try {
+            const { error } = await supabase.from('protocols_reports').delete().eq('id', id);
+            if (error) {
+                console.error('Supabase Delete Error:', error);
+                throw error;
+            }
+            set((state) => ({ protocols_reports: state.protocols_reports.filter(p => p.id !== id) }));
+        } catch (e) {
+            console.warn('Failed to delete Protocol/Report from Supabase.', e);
+        }
+    },
+
+    deleteChecklistFormat: async (id) => {
+        try {
+            const { error } = await supabase.from('checklists_formats').delete().eq('id', id);
+            if (error) {
+                console.error('Supabase Delete Error:', error);
+                throw error;
+            }
+            set((state) => ({ checklists_formats: state.checklists_formats.filter(p => p.id !== id) }));
+        } catch (e) {
+            console.warn('Failed to delete Checklist/Format from Supabase.', e);
         }
     },
 

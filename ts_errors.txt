@@ -1,0 +1,2 @@
+.next/types/validator.ts(107,39): error TS2307: Cannot find module '../../src/app/forum/[id]/page.js' or its corresponding type declarations.
+.next/types/validator.ts(116,39): error TS2307: Cannot find module '../../src/app/forum/page.js' or its corresponding type declarations.

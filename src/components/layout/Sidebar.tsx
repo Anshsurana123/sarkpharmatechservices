@@ -13,7 +13,7 @@ import {
     SidebarMenuItem,
     SidebarFooter,
 } from '@/components/ui/sidebar';
-import { FileText, FlaskConical, ShieldCheck, Stethoscope, Settings, Beaker, BriefcaseMedical, Cross, Microscope, BookOpen, Info, User, GraduationCap, PackageOpen, Wrench, Presentation } from 'lucide-react';
+import { FileText, FlaskConical, ShieldCheck, Stethoscope, Settings, Beaker, BriefcaseMedical, Cross, Microscope, BookOpen, Info, User, GraduationCap, PackageOpen, Wrench, Presentation, ClipboardCheck } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { usePharmaStore } from '@/data/store';
@@ -22,6 +22,8 @@ const mainNavItems = [
     { title: 'SOP Database', url: '/sops', icon: FileText },
     { title: 'Policies', url: '/policies', icon: BookOpen },
     { title: 'Presentations', url: '/presentations', icon: Presentation },
+    { title: 'Protocols & Reports', url: '/protocols-reports', icon: Microscope },
+    { title: 'Checklists & Formats', url: '/checklists-formats', icon: ClipboardCheck },
     { title: 'Bundles & Packages', url: '/bundles', icon: PackageOpen },
     { title: 'Courses & Training', url: '/courses', icon: GraduationCap },
     { title: 'Career Resources', url: '/resources', icon: Wrench },

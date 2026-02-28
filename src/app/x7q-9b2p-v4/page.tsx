@@ -11,7 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { FileText, Building2, UploadCloud, Trash2, ShieldCheck, Newspaper, Users, CreditCard, GraduationCap, PackageOpen, Presentation, BookOpen } from 'lucide-react';
+import { FileText, Building2, UploadCloud, Trash2, ShieldCheck, Newspaper, Users, CreditCard, GraduationCap, PackageOpen, Presentation, BookOpen, Microscope, ClipboardCheck } from 'lucide-react';
 import { supabase } from '@/utils/supabase/client';
 
 export default function AdminPage() {
@@ -37,6 +37,14 @@ export default function AdminPage() {
 
     const bundleLinks = usePharmaStore(state => state.bundleLinks);
     const updateBundleLink = usePharmaStore(state => state.updateBundleLink);
+
+    const addProtocolReport = usePharmaStore(state => state.addProtocolReport);
+    const deleteProtocolReport = usePharmaStore(state => state.deleteProtocolReport);
+    const protocols_reports = usePharmaStore(state => state.protocols_reports);
+
+    const addChecklistFormat = usePharmaStore(state => state.addChecklistFormat);
+    const deleteChecklistFormat = usePharmaStore(state => state.deleteChecklistFormat);
+    const checklists_formats = usePharmaStore(state => state.checklists_formats);
 
     const initialize = usePharmaStore(state => state.initialize);
     const isInitialized = usePharmaStore(state => state.isInitialized);
@@ -65,6 +73,22 @@ export default function AdminPage() {
     const [presentationPrice, setPresentationPrice] = useState('');
     const [presentationFile, setPresentationFile] = useState<File | null>(null);
     const [isPresentationUploading, setIsPresentationUploading] = useState(false);
+
+    // Protocol form state
+    const [protocolTitle, setProtocolTitle] = useState('');
+    const [protocolDept, setProtocolDept] = useState('');
+    const [protocolContent, setProtocolContent] = useState('');
+    const [protocolPrice, setProtocolPrice] = useState('');
+    const [protocolFile, setProtocolFile] = useState<File | null>(null);
+    const [isProtocolUploading, setIsProtocolUploading] = useState(false);
+
+    // Checklist form state
+    const [checklistTitle, setChecklistTitle] = useState('');
+    const [checklistDept, setChecklistDept] = useState('');
+    const [checklistContent, setChecklistContent] = useState('');
+    const [checklistPrice, setChecklistPrice] = useState('');
+    const [checklistFile, setChecklistFile] = useState<File | null>(null);
+    const [isChecklistUploading, setIsChecklistUploading] = useState(false);
 
     const [deptTitle, setDeptTitle] = useState('');
     const [deptDesc, setDeptDesc] = useState('');
@@ -298,6 +322,90 @@ export default function AdminPage() {
         alert('✅ Presentation Added Successfully!');
     };
 
+    const handleAddProtocol = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!protocolTitle || !protocolDept) return;
+        setIsProtocolUploading(true);
+
+        let file_url = undefined;
+
+        if (protocolFile) {
+            const fileName = `${protocolDept.substring(0, 3)}-${Date.now()}-${protocolFile.name.replace(/[^a-zA-Z0-9.]/g, '_')}`;
+            const { data, error } = await supabase.storage.from('sops').upload(`protocols/${fileName}`, protocolFile);
+            if (error) {
+                console.error("Storage upload error:", error);
+                alert("Failed to upload the file to Supabase Storage.");
+            } else if (data) {
+                const { data: publicData } = supabase.storage.from('sops').getPublicUrl(`protocols/${fileName}`);
+                file_url = publicData.publicUrl;
+            }
+        }
+
+        await addProtocolReport({
+            title: protocolTitle,
+            department: protocolDept,
+            documentType: 'Protocol/Report',
+            status: 'Approved',
+            date: new Date().toISOString().split('T')[0],
+            author: 'Admin User',
+            content: protocolContent,
+            file_url: file_url,
+            price: protocolPrice ? Number(protocolPrice) : undefined
+        });
+
+        setProtocolTitle('');
+        setProtocolDept('');
+        setProtocolContent('');
+        setProtocolPrice('');
+        setProtocolFile(null);
+        setIsProtocolUploading(false);
+        const el = document.getElementById('protocol-file-upload') as HTMLInputElement;
+        if (el) el.value = '';
+        alert('✅ Protocol/Report Added Successfully!');
+    };
+
+    const handleAddChecklist = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!checklistTitle || !checklistDept) return;
+        setIsChecklistUploading(true);
+
+        let file_url = undefined;
+
+        if (checklistFile) {
+            const fileName = `${checklistDept.substring(0, 3)}-${Date.now()}-${checklistFile.name.replace(/[^a-zA-Z0-9.]/g, '_')}`;
+            const { data, error } = await supabase.storage.from('sops').upload(`checklists/${fileName}`, checklistFile);
+            if (error) {
+                console.error("Storage upload error:", error);
+                alert("Failed to upload the file to Supabase Storage.");
+            } else if (data) {
+                const { data: publicData } = supabase.storage.from('sops').getPublicUrl(`checklists/${fileName}`);
+                file_url = publicData.publicUrl;
+            }
+        }
+
+        await addChecklistFormat({
+            title: checklistTitle,
+            department: checklistDept,
+            documentType: 'Checklist/Format',
+            status: 'Approved',
+            date: new Date().toISOString().split('T')[0],
+            author: 'Admin User',
+            content: checklistContent,
+            file_url: file_url,
+            price: checklistPrice ? Number(checklistPrice) : undefined
+        });
+
+        setChecklistTitle('');
+        setChecklistDept('');
+        setChecklistContent('');
+        setChecklistPrice('');
+        setChecklistFile(null);
+        setIsChecklistUploading(false);
+        const el = document.getElementById('checklist-file-upload') as HTMLInputElement;
+        if (el) el.value = '';
+        alert('✅ Checklist/Format Added Successfully!');
+    };
+
     const handleAddDepartment = (e: React.FormEvent) => {
         e.preventDefault();
         if (!deptTitle || !deptDesc) return;
@@ -511,6 +619,12 @@ export default function AdminPage() {
                     </TabsTrigger>
                     <TabsTrigger value="presentations" className="flex items-center gap-2">
                         <Presentation className="h-4 w-4" /> Presentations
+                    </TabsTrigger>
+                    <TabsTrigger value="protocols" className="flex items-center gap-2">
+                        <Microscope className="h-4 w-4" /> Protocols
+                    </TabsTrigger>
+                    <TabsTrigger value="checklists" className="flex items-center gap-2">
+                        <ClipboardCheck className="h-4 w-4" /> Checklists
                     </TabsTrigger>
                     <TabsTrigger value="departments" className="flex items-center gap-2">
                         <Building2 className="h-4 w-4" /> Departments
@@ -871,6 +985,220 @@ export default function AdminPage() {
                                                 onClick={async () => {
                                                     if (confirm('Are you sure you want to delete this presentation?')) {
                                                         await deletePolicy(presentation.id);
+                                                    }
+                                                }}
+                                            >
+                                                <Trash2 className="h-4 w-4" />
+                                            </Button>
+                                        </div>
+                                    ))
+                                )}
+                            </div>
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+
+                <TabsContent value="protocols">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Add New Protocol / Report</CardTitle>
+                            <CardDescription>Upload a new protocol or report to the database.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <form onSubmit={handleAddProtocol} className="space-y-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="protocolTitle">Document Title</Label>
+                                    <Input
+                                        id="protocolTitle"
+                                        placeholder="e.g., Performance Qualification Protocol"
+                                        value={protocolTitle}
+                                        onChange={(e) => setProtocolTitle(e.target.value)}
+                                        required
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="protocolPrice">Price (INR) - If Paid</Label>
+                                    <Input
+                                        id="protocolPrice"
+                                        type="number"
+                                        placeholder="e.g., 999 (Leave blank for Free/Available)"
+                                        value={protocolPrice}
+                                        onChange={(e) => setProtocolPrice(e.target.value)}
+                                    />
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                        <Label>Department</Label>
+                                        <Select value={protocolDept} onValueChange={setProtocolDept} required>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Select department" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {departments.map(d => (
+                                                    <SelectItem key={d.id} value={d.title}>{d.title}</SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label>Document Upload</Label>
+                                        <div className="flex items-center gap-4">
+                                            <Input
+                                                id="protocol-file-upload"
+                                                type="file"
+                                                accept=".doc,.docx,.pdf"
+                                                onChange={(e) => setProtocolFile(e.target.files?.[0] || null)}
+                                            />
+                                            {protocolFile && <span className="text-xs text-muted-foreground whitespace-nowrap">{Math.round(protocolFile.size / 1024)} KB</span>}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="space-y-2 pt-2 border-t">
+                                    <Label htmlFor="protocolContent">Document Content (Optional Markdown/Text)</Label>
+                                    <Textarea
+                                        id="protocolContent"
+                                        placeholder="Write an overview or full content here..."
+                                        className="min-h-[150px]"
+                                        value={protocolContent}
+                                        onChange={(e) => setProtocolContent(e.target.value)}
+                                    />
+                                </div>
+                                <Button type="submit" className="w-full mt-4" disabled={isProtocolUploading}>
+                                    {isProtocolUploading ? 'Uploading...' : 'Create Document'}
+                                </Button>
+                            </form>
+                        </CardContent>
+                    </Card>
+
+                    <Card className="mt-6 border-destructive/20">
+                        <CardHeader>
+                            <CardTitle className="text-destructive">Manage Protocols & Reports</CardTitle>
+                            <CardDescription>Permanently remove protocols from the database.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="space-y-4">
+                                {protocols_reports.length === 0 ? (
+                                    <p className="text-sm text-muted-foreground">No protocols found.</p>
+                                ) : (
+                                    protocols_reports.map(protocol => (
+                                        <div key={protocol.id} className="flex items-center justify-between p-3 rounded-md border bg-muted/20">
+                                            <div>
+                                                <p className="font-medium text-sm">{protocol.title}</p>
+                                                <p className="text-xs text-muted-foreground">{protocol.id} • {protocol.department}</p>
+                                            </div>
+                                            <Button
+                                                variant="destructive"
+                                                size="sm"
+                                                onClick={async () => {
+                                                    if (confirm('Are you sure you want to delete this protocol/report?')) {
+                                                        await deleteProtocolReport(protocol.id);
+                                                    }
+                                                }}
+                                            >
+                                                <Trash2 className="h-4 w-4" />
+                                            </Button>
+                                        </div>
+                                    ))
+                                )}
+                            </div>
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+
+                <TabsContent value="checklists">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Add New Checklist / Format</CardTitle>
+                            <CardDescription>Upload a new checklist or document format to the database.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <form onSubmit={handleAddChecklist} className="space-y-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="checklistTitle">Document Title</Label>
+                                    <Input
+                                        id="checklistTitle"
+                                        placeholder="e.g., Weekly Cleaning Checklist"
+                                        value={checklistTitle}
+                                        onChange={(e) => setChecklistTitle(e.target.value)}
+                                        required
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="checklistPrice">Price (INR) - If Paid</Label>
+                                    <Input
+                                        id="checklistPrice"
+                                        type="number"
+                                        placeholder="e.g., 499 (Leave blank for Free/Available)"
+                                        value={checklistPrice}
+                                        onChange={(e) => setChecklistPrice(e.target.value)}
+                                    />
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                        <Label>Department</Label>
+                                        <Select value={checklistDept} onValueChange={setChecklistDept} required>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Select department" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {departments.map(d => (
+                                                    <SelectItem key={d.id} value={d.title}>{d.title}</SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label>Document Upload</Label>
+                                        <div className="flex items-center gap-4">
+                                            <Input
+                                                id="checklist-file-upload"
+                                                type="file"
+                                                accept=".doc,.docx,.pdf"
+                                                onChange={(e) => setChecklistFile(e.target.files?.[0] || null)}
+                                            />
+                                            {checklistFile && <span className="text-xs text-muted-foreground whitespace-nowrap">{Math.round(checklistFile.size / 1024)} KB</span>}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="space-y-2 pt-2 border-t">
+                                    <Label htmlFor="checklistContent">Document Content (Optional Markdown/Text)</Label>
+                                    <Textarea
+                                        id="checklistContent"
+                                        placeholder="Write an overview or full content here..."
+                                        className="min-h-[150px]"
+                                        value={checklistContent}
+                                        onChange={(e) => setChecklistContent(e.target.value)}
+                                    />
+                                </div>
+                                <Button type="submit" className="w-full mt-4" disabled={isChecklistUploading}>
+                                    {isChecklistUploading ? 'Uploading...' : 'Create Document'}
+                                </Button>
+                            </form>
+                        </CardContent>
+                    </Card>
+
+                    <Card className="mt-6 border-destructive/20">
+                        <CardHeader>
+                            <CardTitle className="text-destructive">Manage Checklists & Formats</CardTitle>
+                            <CardDescription>Permanently remove checklists from the database.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="space-y-4">
+                                {checklists_formats.length === 0 ? (
+                                    <p className="text-sm text-muted-foreground">No checklists found.</p>
+                                ) : (
+                                    checklists_formats.map(checklist => (
+                                        <div key={checklist.id} className="flex items-center justify-between p-3 rounded-md border bg-muted/20">
+                                            <div>
+                                                <p className="font-medium text-sm">{checklist.title}</p>
+                                                <p className="text-xs text-muted-foreground">{checklist.id} • {checklist.department}</p>
+                                            </div>
+                                            <Button
+                                                variant="destructive"
+                                                size="sm"
+                                                onClick={async () => {
+                                                    if (confirm('Are you sure you want to delete this checklist/format?')) {
+                                                        await deleteChecklistFormat(checklist.id);
                                                     }
                                                 }}
                                             >
