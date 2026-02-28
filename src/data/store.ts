@@ -3,6 +3,19 @@ import { SOP } from './mockData';
 import { supabase } from '@/utils/supabase/client';
 import type { Session } from '@supabase/supabase-js';
 
+export type Policy = {
+    id: string;
+    title: string;
+    department: string;
+    documentType: string;
+    status: string;
+    date: string;
+    author: string;
+    content?: string;
+    file_url?: string;
+    price?: number;
+};
+
 export type Insight = {
     id: string;
     title: string;
@@ -44,6 +57,7 @@ export type Department = {
 
 interface PharmaStore {
     sops: SOP[];
+    policies: Policy[];
     departments: Department[];
     insights: Insight[];
     courses: Course[];
@@ -52,8 +66,10 @@ interface PharmaStore {
     isInitialized: boolean;
     initialize: () => Promise<void>;
     addSop: (sop: Omit<SOP, 'id'>) => Promise<void>;
+    addPolicy: (policy: Omit<Policy, 'id'>) => Promise<void>;
     addDepartment: (dept: Omit<Department, 'id' | 'url'>) => Promise<void>;
     deleteSop: (id: string) => Promise<void>;
+    deletePolicy: (id: string) => Promise<void>;
     deleteDepartment: (id: string) => Promise<void>;
     addInsight: (insight: Omit<Insight, 'id'>) => Promise<void>;
     deleteInsight: (id: string) => Promise<void>;
@@ -64,6 +80,7 @@ interface PharmaStore {
 
 export const usePharmaStore = create<PharmaStore>((set, get) => ({
     sops: [],
+    policies: [],
     departments: [],
     insights: [],
     courses: [],
@@ -78,6 +95,7 @@ export const usePharmaStore = create<PharmaStore>((set, get) => ({
             // Try fetching from Supabase
             const { data: deptData, error: deptError } = await supabase.from('departments').select('*');
             const { data: sopData, error: sopError } = await supabase.from('sops').select('*');
+            const { data: policyData } = await supabase.from('policies_presentations').select('*');
             const { data: insightData } = await supabase.from('insights').select('*').order('created_at', { ascending: false });
             const { data: courseData } = await supabase.from('courses').select('*').order('created_at', { ascending: false });
             const { data: bundleData } = await supabase.from('bundle_links').select('*');
@@ -98,6 +116,7 @@ export const usePharmaStore = create<PharmaStore>((set, get) => ({
 
             set({
                 sops: sopData as SOP[],
+                policies: (policyData as Policy[]) || [],
                 departments: deptData as Department[],
                 insights: (insightData as Insight[]) || [],
                 courses: (courseData as Course[]) || [],
@@ -132,6 +151,26 @@ export const usePharmaStore = create<PharmaStore>((set, get) => ({
         }
     },
 
+    addPolicy: async (policy) => {
+        const newPolicy = {
+            ...policy,
+            id: `POL-${policy.department.substring(0, 2).toUpperCase()}-${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`
+        };
+
+        try {
+            const { error } = await supabase.from('policies_presentations').insert([newPolicy]);
+            if (error) {
+                console.error('Supabase Insert Error:', error);
+                throw error;
+            }
+
+            set((state) => ({ policies: [...state.policies, newPolicy] }));
+        } catch (e) {
+            console.warn('Failed to insert Policy to Supabase.', e);
+            throw e;
+        }
+    },
+
     addDepartment: async (dept) => {
         const id = dept.title.toLowerCase().replace(/[^a-z0-9]/g, '-');
         const newDept = { ...dept, id, url: `/departments/${id}` };
@@ -160,6 +199,19 @@ export const usePharmaStore = create<PharmaStore>((set, get) => ({
             set((state) => ({ sops: state.sops.filter(sop => sop.id !== id) }));
         } catch (e) {
             console.warn('Failed to delete SOP from Supabase.', e);
+        }
+    },
+
+    deletePolicy: async (id) => {
+        try {
+            const { error } = await supabase.from('policies_presentations').delete().eq('id', id);
+            if (error) {
+                console.error('Supabase Delete Error:', error);
+                throw error;
+            }
+            set((state) => ({ policies: state.policies.filter(p => p.id !== id) }));
+        } catch (e) {
+            console.warn('Failed to delete Policy from Supabase.', e);
         }
     },
 

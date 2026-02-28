@@ -11,13 +11,17 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { FileText, Building2, UploadCloud, Trash2, ShieldCheck, Newspaper, Users, CreditCard, GraduationCap, PackageOpen } from 'lucide-react';
+import { FileText, Building2, UploadCloud, Trash2, ShieldCheck, Newspaper, Users, CreditCard, GraduationCap, PackageOpen, Presentation } from 'lucide-react';
 import { supabase } from '@/utils/supabase/client';
 
 export default function AdminPage() {
     const addSop = usePharmaStore(state => state.addSop);
     const deleteSop = usePharmaStore(state => state.deleteSop);
     const sops = usePharmaStore(state => state.sops);
+
+    const addPolicy = usePharmaStore(state => state.addPolicy);
+    const deletePolicy = usePharmaStore(state => state.deletePolicy);
+    const policies = usePharmaStore(state => state.policies);
 
     const addDepartment = usePharmaStore(state => state.addDepartment);
     const deleteDepartment = usePharmaStore(state => state.deleteDepartment);
@@ -44,6 +48,15 @@ export default function AdminPage() {
     const [sopPrice, setSopPrice] = useState('');
     const [sopFile, setSopFile] = useState<File | null>(null);
     const [isUploading, setIsUploading] = useState(false);
+
+    // Policy form state
+    const [policyTitle, setPolicyTitle] = useState('');
+    const [policyDept, setPolicyDept] = useState('');
+    const [policyType, setPolicyType] = useState('');
+    const [policyContent, setPolicyContent] = useState('');
+    const [policyPrice, setPolicyPrice] = useState('');
+    const [policyFile, setPolicyFile] = useState<File | null>(null);
+    const [isPolicyUploading, setIsPolicyUploading] = useState(false);
 
     const [deptTitle, setDeptTitle] = useState('');
     const [deptDesc, setDeptDesc] = useState('');
@@ -188,6 +201,52 @@ export default function AdminPage() {
         const el = document.getElementById('file-upload') as HTMLInputElement;
         if (el) el.value = '';
         alert('✅ SOP Added Successfully and saved to database!');
+    };
+
+    const handleAddPolicy = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!policyTitle || !policyDept || !policyType) return;
+        setIsPolicyUploading(true);
+
+        let file_url = undefined;
+
+        if (policyFile) {
+            const fileName = `${policyDept.substring(0, 3)}-${Date.now()}-${policyFile.name.replace(/[^a-zA-Z0-9.]/g, '_')}`;
+            // Let's use the 'sops' bucket for now, or assume the user created 'policies' bucket.
+            // Using 'sops' since we know it exists, but putting in a policies folder if we like, or just direct.
+            const { data, error } = await supabase.storage.from('sops').upload(`policies/${fileName}`, policyFile);
+
+            if (error) {
+                console.error("Storage upload error:", error);
+                alert("Failed to upload the file to Supabase Storage.");
+            } else if (data) {
+                const { data: publicData } = supabase.storage.from('sops').getPublicUrl(`policies/${fileName}`);
+                file_url = publicData.publicUrl;
+            }
+        }
+
+        await addPolicy({
+            title: policyTitle,
+            department: policyDept,
+            documentType: policyType,
+            status: 'Approved',
+            date: new Date().toISOString().split('T')[0],
+            author: 'Admin User',
+            content: policyContent,
+            file_url: file_url,
+            price: policyPrice ? Number(policyPrice) : undefined
+        });
+
+        setPolicyTitle('');
+        setPolicyDept('');
+        setPolicyType('');
+        setPolicyContent('');
+        setPolicyPrice('');
+        setPolicyFile(null);
+        setIsPolicyUploading(false);
+        const el = document.getElementById('policy-file-upload') as HTMLInputElement;
+        if (el) el.value = '';
+        alert('✅ Policy/Presentation Added Successfully!');
     };
 
     const handleAddDepartment = (e: React.FormEvent) => {
@@ -398,6 +457,9 @@ export default function AdminPage() {
                     <TabsTrigger value="sops" className="flex items-center gap-2">
                         <FileText className="h-4 w-4" /> Documents
                     </TabsTrigger>
+                    <TabsTrigger value="policies" className="flex items-center gap-2">
+                        <Presentation className="h-4 w-4" /> Policies
+                    </TabsTrigger>
                     <TabsTrigger value="departments" className="flex items-center gap-2">
                         <Building2 className="h-4 w-4" /> Departments
                     </TabsTrigger>
@@ -526,6 +588,127 @@ export default function AdminPage() {
                                                 onClick={async () => {
                                                     if (confirm('Are you sure you want to delete this document?')) {
                                                         await deleteSop(sop.id);
+                                                    }
+                                                }}
+                                            >
+                                                <Trash2 className="h-4 w-4" />
+                                            </Button>
+                                        </div>
+                                    ))
+                                )}
+                            </div>
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+
+                <TabsContent value="policies">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Add New Policy / Presentation</CardTitle>
+                            <CardDescription>Upload a new policy or presentation to the database.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <form onSubmit={handleAddPolicy} className="space-y-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="policyTitle">Document Title</Label>
+                                    <Input
+                                        id="policyTitle"
+                                        placeholder="e.g., Annual GMP Training Presentation"
+                                        value={policyTitle}
+                                        onChange={(e) => setPolicyTitle(e.target.value)}
+                                        required
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="policyPrice">Price (INR) - If Paid</Label>
+                                    <Input
+                                        id="policyPrice"
+                                        type="number"
+                                        placeholder="e.g., 499 (Leave blank for Free/Available)"
+                                        value={policyPrice}
+                                        onChange={(e) => setPolicyPrice(e.target.value)}
+                                    />
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                        <Label>Department</Label>
+                                        <Select value={policyDept} onValueChange={setPolicyDept} required>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Select department" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {departments.map(d => (
+                                                    <SelectItem key={d.id} value={d.title}>{d.title}</SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label>Document Type</Label>
+                                        <Select value={policyType} onValueChange={setPolicyType} required>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Select type" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="Policy">Policy</SelectItem>
+                                                <SelectItem value="Presentation">Presentation</SelectItem>
+                                                <SelectItem value="Guideline">Guideline</SelectItem>
+                                                <SelectItem value="Manual">Manual</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label>Document Upload</Label>
+                                        <div className="flex items-center gap-4">
+                                            <Input
+                                                id="policy-file-upload"
+                                                type="file"
+                                                accept=".doc,.docx,.pdf,.ppt,.pptx"
+                                                onChange={(e) => setPolicyFile(e.target.files?.[0] || null)}
+                                            />
+                                            {policyFile && <span className="text-xs text-muted-foreground whitespace-nowrap">{Math.round(policyFile.size / 1024)} KB</span>}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="space-y-2 pt-2 border-t">
+                                    <Label htmlFor="policyContent">Document Content (Optional Markdown/Text)</Label>
+                                    <Textarea
+                                        id="policyContent"
+                                        placeholder="Write an overview or full content here..."
+                                        className="min-h-[150px]"
+                                        value={policyContent}
+                                        onChange={(e) => setPolicyContent(e.target.value)}
+                                    />
+                                </div>
+                                <Button type="submit" className="w-full mt-4" disabled={isPolicyUploading}>
+                                    {isPolicyUploading ? 'Uploading...' : 'Create Document'}
+                                </Button>
+                            </form>
+                        </CardContent>
+                    </Card>
+
+                    <Card className="mt-6 border-destructive/20">
+                        <CardHeader>
+                            <CardTitle className="text-destructive">Manage Policies & Presentations</CardTitle>
+                            <CardDescription>Permanently remove policies from the database.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="space-y-4">
+                                {policies.length === 0 ? (
+                                    <p className="text-sm text-muted-foreground">No policies found.</p>
+                                ) : (
+                                    policies.map(policy => (
+                                        <div key={policy.id} className="flex items-center justify-between p-3 rounded-md border bg-muted/20">
+                                            <div>
+                                                <p className="font-medium text-sm">{policy.title}</p>
+                                                <p className="text-xs text-muted-foreground">{policy.id} • {policy.department}</p>
+                                            </div>
+                                            <Button
+                                                variant="destructive"
+                                                size="sm"
+                                                onClick={async () => {
+                                                    if (confirm('Are you sure you want to delete this policy?')) {
+                                                        await deletePolicy(policy.id);
                                                     }
                                                 }}
                                             >

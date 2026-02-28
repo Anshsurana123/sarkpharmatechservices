@@ -20,6 +20,7 @@ import { usePharmaStore } from '@/data/store';
 
 const mainNavItems = [
     { title: 'SOP Database', url: '/sops', icon: FileText },
+    { title: 'Policies and Presentations', url: '/policies', icon: BookOpen },
     { title: 'Bundles & Packages', url: '/bundles', icon: PackageOpen },
     { title: 'Courses & Training', url: '/courses', icon: GraduationCap },
     { title: 'Career Resources', url: '/resources', icon: Wrench },
