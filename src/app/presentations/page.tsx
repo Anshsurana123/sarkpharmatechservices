@@ -17,9 +17,9 @@ import {
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { FileText, Search, ShoppingCart, Presentation } from 'lucide-react';
+import { Search, ShoppingCart, Presentation } from 'lucide-react';
 
-function PoliciesDashboardContent() {
+function PresentationsDashboardContent() {
     const { processPayment, isProcessing } = useRazorpay();
     const searchParams = useSearchParams();
     const policies = usePharmaStore(state => state.policies);
@@ -50,8 +50,8 @@ function PoliciesDashboardContent() {
         }
     };
 
-    const filteredPolicies = policies.filter(policy => {
-        if (policy.documentType === 'Presentation') return false;
+    const filteredPresentations = policies.filter(policy => {
+        if (policy.documentType !== 'Presentation') return false;
         const matchesSearch = policy.title.toLowerCase().includes(searchQuery.toLowerCase()) || policy.id.toLowerCase().includes(searchQuery.toLowerCase());
         const matchesDept = selectedDepts.length === 0 || selectedDepts.includes(policy.department);
         return matchesSearch && matchesDept;
@@ -61,8 +61,8 @@ function PoliciesDashboardContent() {
         <div className="space-y-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight">Policies</h1>
-                    <p className="text-muted-foreground">Search, filter, and access all company policies.</p>
+                    <h1 className="text-3xl font-bold tracking-tight">Presentations</h1>
+                    <p className="text-muted-foreground">Search, filter, and access all training presentations.</p>
                 </div>
             </div>
 
@@ -106,7 +106,7 @@ function PoliciesDashboardContent() {
                             />
                         </div>
                         <div className="text-sm text-muted-foreground whitespace-nowrap">
-                            {filteredPolicies.length} results
+                            {filteredPresentations.length} results
                         </div>
                     </div>
 
@@ -121,28 +121,28 @@ function PoliciesDashboardContent() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {filteredPolicies.length === 0 ? (
+                                {filteredPresentations.length === 0 ? (
                                     <TableRow>
                                         <TableCell colSpan={4} className="text-center h-32 text-muted-foreground">
-                                            No policies found matching your criteria.
+                                            No presentations found matching your criteria.
                                         </TableCell>
                                     </TableRow>
                                 ) : (
-                                    filteredPolicies.map((policy) => (
-                                        <TableRow key={policy.id} className="hover:bg-muted/10">
+                                    filteredPresentations.map((presentation) => (
+                                        <TableRow key={presentation.id} className="hover:bg-muted/10">
                                             <TableCell className="font-medium text-primary">
                                                 <div className="flex items-center gap-2">
-                                                    <FileText className="h-4 w-4 text-muted-foreground" />
-                                                    {policy.id}
+                                                    <Presentation className="h-4 w-4 text-muted-foreground" />
+                                                    {presentation.id}
                                                 </div>
                                             </TableCell>
                                             <TableCell>
-                                                <Link href={`/policies/${policy.id}`} className="font-semibold text-primary hover:underline">{policy.title}</Link>
-                                                <div className="text-xs text-muted-foreground mt-1">Updated {policy.date} • {policy.author}</div>
+                                                <Link href={`/presentations/${presentation.id}`} className="font-semibold text-primary hover:underline">{presentation.title}</Link>
+                                                <div className="text-xs text-muted-foreground mt-1">Updated {presentation.date} • {presentation.author}</div>
                                             </TableCell>
                                             <TableCell>
                                                 <Badge variant="outline" className="bg-background">
-                                                    {policy.department}
+                                                    {presentation.department}
                                                 </Badge>
                                             </TableCell>
                                             <TableCell className="text-right">
@@ -150,10 +150,10 @@ function PoliciesDashboardContent() {
                                                     variant="default"
                                                     size="sm"
                                                     className="bg-primary hover:bg-primary/90"
-                                                    onClick={() => processPayment(policy.price || 499, 'INR', `License for ${policy.title}`)}
+                                                    onClick={() => processPayment(presentation.price || 499, 'INR', `License for ${presentation.title}`)}
                                                     disabled={isProcessing}
                                                 >
-                                                    <ShoppingCart className="h-4 w-4 mr-2" /> {isProcessing ? 'Processing' : `Buy Policy - ₹${policy.price || 499}`}
+                                                    <ShoppingCart className="h-4 w-4 mr-2" /> {isProcessing ? 'Processing' : `Buy Presentation - ₹${presentation.price || 499}`}
                                                 </Button>
                                             </TableCell>
                                         </TableRow>
@@ -168,10 +168,10 @@ function PoliciesDashboardContent() {
     );
 }
 
-export default function PoliciesDashboard() {
+export default function PresentationsDashboard() {
     return (
         <Suspense fallback={<SOPTableSkeleton />}>
-            <PoliciesDashboardContent />
+            <PresentationsDashboardContent />
         </Suspense>
     );
 }

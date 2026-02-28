@@ -13,18 +13,18 @@ import {
     SidebarMenuItem,
     SidebarFooter,
 } from '@/components/ui/sidebar';
-import { FileText, FlaskConical, ShieldCheck, Stethoscope, Settings, Beaker, BriefcaseMedical, Cross, Microscope, BookOpen, Info, User, GraduationCap, PackageOpen, Wrench, Users } from 'lucide-react';
+import { FileText, FlaskConical, ShieldCheck, Stethoscope, Settings, Beaker, BriefcaseMedical, Cross, Microscope, BookOpen, Info, User, GraduationCap, PackageOpen, Wrench, Presentation } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { usePharmaStore } from '@/data/store';
 
 const mainNavItems = [
     { title: 'SOP Database', url: '/sops', icon: FileText },
-    { title: 'Policies and Presentations', url: '/policies', icon: BookOpen },
+    { title: 'Policies', url: '/policies', icon: BookOpen },
+    { title: 'Presentations', url: '/presentations', icon: Presentation },
     { title: 'Bundles & Packages', url: '/bundles', icon: PackageOpen },
     { title: 'Courses & Training', url: '/courses', icon: GraduationCap },
     { title: 'Career Resources', url: '/resources', icon: Wrench },
-    { title: 'Community Forum', url: '/forum', icon: Users },
 ];
 
 const iconMap: Record<string, any> = {

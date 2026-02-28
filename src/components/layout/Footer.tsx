@@ -33,7 +33,6 @@ export function Footer() {
                                 { label: 'Courses & Training', href: '/courses' },
                                 { label: 'Regulatory Insights', href: '/insights' },
                                 { label: 'Career Resources', href: '/resources' },
-                                { label: 'Community Forum', href: '/forum' },
                                 { label: 'About Us', href: '/about' },
                             ].map(({ label, href }) => (
                                 <li key={label}>
